@@ -5,7 +5,11 @@ description: "Learn how to fetch and compare odds from multiple bookmakers"
 
 ## Overview
 
-The Odds-API.io provides several endpoints for fetching odds data from 250+ bookmakers. This guide covers best practices and common patterns for working with odds data.
+The Odds-API.io provides several endpoints for fetching odds data from multiple bookmakers. This guide covers best practices and common patterns for working with odds data.
+
+<Note>
+  For an up-to-date list of all supported bookmakers, visit [odds-api.io/sportsbooks](https://odds-api.io/sportsbooks).
+</Note>
 
 ## Basic Workflow
 
@@ -304,7 +308,7 @@ async function getCachedOdds(eventId) {
 
 <AccordionGroup>
   <Accordion title="Select Only Needed Bookmakers">
-    Don't fetch odds from all 250+ bookmakers. Select the most relevant bookmakers for your users (max 30 per request).
+    Select only the most relevant bookmakers for your users. See the [full list of supported bookmakers](https://odds-api.io/sportsbooks).
   </Accordion>
 
   <Accordion title="Use Multi-Odds Endpoint">

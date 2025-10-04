@@ -44,6 +44,12 @@
         "tab": "API Reference",
         "groups": [
           {
+            "group": "Getting Started",
+            "pages": [
+              "api-reference/introduction"
+            ]
+          },
+          {
             "group": "Sports & Leagues",
             "pages": [
               "api-reference/sports/get-sports",
@@ -78,6 +84,12 @@
             "group": "Value Bets",
             "pages": [
               "api-reference/value-bets/get-value-bets"
+            ]
+          },
+          {
+            "group": "WebSocket",
+            "pages": [
+              "api-reference/websocket"
             ]
           }
         ]

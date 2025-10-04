@@ -1,33 +1,63 @@
 ---
-title: 'Introduction'
-description: 'Example section for showcasing API endpoints'
+title: 'API Introduction'
+description: 'Getting started with the Odds-API.io API'
 ---
 
-<Note>
-  If you're not looking to build API reference documentation, you can delete
-  this section by removing the api-reference folder.
-</Note>
+## Overview
 
-## Welcome
+Odds-API.io provides real-time sports betting odds data from multiple bookmakers across 10+ sports.
 
-There are two ways to build API documentation: [OpenAPI](https://mintlify.com/docs/api-playground/openapi/setup) and [MDX components](https://mintlify.com/docs/api-playground/mdx/configuration). For the starter kit, we are using the following OpenAPI specification.
+For an up-to-date list of all supported bookmakers, visit [odds-api.io/sportsbooks](https://odds-api.io/sportsbooks).
 
-<Card
-  title="Plant Store Endpoints"
-  icon="leaf"
-  href="https://github.com/mintlify/starter/blob/main/api-reference/openapi.json"
->
-  View the OpenAPI specification file
-</Card>
+## API Endpoints
+
+The API is organized into the following endpoint categories:
+
+<CardGroup cols={2}>
+  <Card title="Sports & Leagues" icon="futbol" href="/api-reference/sports/get-sports">
+    Get available sports and leagues
+  </Card>
+  <Card title="Events" icon="calendar" href="/api-reference/events/get-events">
+    Fetch upcoming and live events
+  </Card>
+  <Card title="Bookmakers" icon="bookmark" href="/api-reference/bookmakers/get-bookmakers">
+    Manage bookmaker selection
+  </Card>
+  <Card title="Odds" icon="chart-line" href="/api-reference/odds/get-odds">
+    Get real-time odds data
+  </Card>
+  <Card title="Value Bets" icon="magnifying-glass-dollar" href="/api-reference/value-bets/get-value-bets">
+    Find profitable betting opportunities
+  </Card>
+  <Card title="WebSocket" icon="bolt" href="/api-reference/websocket">
+    Real-time odds updates via WebSocket
+  </Card>
+</CardGroup>
 
 ## Authentication
 
-All API endpoints are authenticated using Bearer tokens and picked up from the specification file.
+All API endpoints require authentication using an API key passed as a query parameter:
 
-```json
-"security": [
-  {
-    "bearerAuth": []
-  }
-]
 ```
+https://api.odds-api.io/v3/events?apiKey=YOUR_API_KEY&sport=football
+```
+
+<Warning>
+  Never expose your API key in client-side code. Always make API calls from your backend server.
+</Warning>
+
+## Base URL
+
+```
+https://api.odds-api.io/v3
+```
+
+## Getting Help
+
+<Card
+  title="Contact Support"
+  icon="envelope"
+  href="mailto:hello@odds-api.io"
+>
+  Need help? Contact us at hello@odds-api.io
+</Card>

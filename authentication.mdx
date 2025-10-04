@@ -9,10 +9,9 @@ Odds-API.io uses API key authentication to secure access to the API. Your API ke
 
 ### Getting Your API Key
 
-1. Sign up for an account at [odds-api.io](https://odds-api.io)
-2. Navigate to your dashboard
-3. Your API key will be displayed in the API Keys section
-4. Copy and securely store your API key
+1. Sign up for a trial at [odds-api.io](https://odds-api.io)
+2. Check your email for the API key
+3. Copy and securely store your API key
 
 <Warning>
   **Keep your API key secure!** Never share it publicly, commit it to version control, or expose it in client-side code.
@@ -103,7 +102,7 @@ ODDS_API_KEY=your_api_key_here
 **Bad Practice:**
 ```javascript
 // ❌ DON'T DO THIS - API key exposed in browser
-const apiKey = 'sk_live_1234567890';
+const apiKey = 'a7f3k9m2p5q8r1t4w6x9z2b5c8';
 fetch(`https://api.odds-api.io/v3/events?apiKey=${apiKey}`);
 ```
 
@@ -135,22 +134,31 @@ For enhanced security:
 
 API requests are rate-limited based on your subscription plan:
 
-| Plan | Requests per Month | Requests per Minute |
-|------|-------------------|---------------------|
-| Free | 10,000 | 10 |
-| Starter | 100,000 | 30 |
-| Pro | 1,000,000 | 100 |
-| Enterprise | Custom | Custom |
+| Plan | Requests per Hour | Additional Packages Available |
+|------|------------------|-------------------------------|
+| Starter | 5,000 | +10K/20K/30K per hour |
+| Growth | 5,000 | +10K/20K/30K per hour |
+| Pro | 5,000 | +10K/20K/30K per hour |
 
-### Handling Rate Limits
+**Additional Request Packages:**
+- +10K requests/hour: £139/month
+- +20K requests/hour: £229/month
+- +30K requests/hour: £309/month
+- Custom volumes available on request
 
-The API returns rate limit information in response headers:
+### Monitoring Rate Limits
+
+The API returns rate limit information in response headers with every request:
 
 ```
-X-RateLimit-Limit: 100
-X-RateLimit-Remaining: 95
-X-RateLimit-Reset: 1633024800
+x-ratelimit-limit: 99999999
+x-ratelimit-remaining: 99999862
+x-ratelimit-reset: 2025-10-03T18:07:41Z
 ```
+
+- **x-ratelimit-limit**: Total requests allowed in the current window
+- **x-ratelimit-remaining**: Requests remaining in the current window
+- **x-ratelimit-reset**: ISO 8601 timestamp when the rate limit resets
 
 When you exceed the rate limit, you'll receive a `429 Too Many Requests` response:
 
@@ -162,10 +170,10 @@ When you exceed the rate limit, you'll receive a `429 Too Many Requests` respons
 
 ### Best Practices for Rate Limiting
 
-1. **Implement exponential backoff** when you receive 429 errors
-2. **Cache responses** when appropriate to reduce API calls
-3. **Use the multi-odds endpoint** to fetch odds for multiple events in a single request
-4. **Monitor your usage** in the dashboard
+1. **Monitor response headers** to track your usage and remaining requests
+2. **Implement exponential backoff** when you receive 429 errors
+3. **Cache responses** when appropriate to reduce API calls
+4. **Use the multi-odds endpoint** to fetch odds for multiple events in a single request
 
 <CodeGroup>
 
@@ -174,9 +182,17 @@ async function fetchWithRetry(url, maxRetries = 3) {
   for (let i = 0; i < maxRetries; i++) {
     const response = await fetch(url);
 
+    // Log rate limit info
+    console.log('Rate limit:', response.headers.get('x-ratelimit-remaining'),
+                '/', response.headers.get('x-ratelimit-limit'));
+    console.log('Resets at:', response.headers.get('x-ratelimit-reset'));
+
     if (response.status === 429) {
-      const retryAfter = response.headers.get('Retry-After') || Math.pow(2, i);
-      await new Promise(resolve => setTimeout(resolve, retryAfter * 1000));
+      const resetTime = new Date(response.headers.get('x-ratelimit-reset'));
+      const waitTime = Math.max(resetTime - Date.now(), Math.pow(2, i) * 1000);
+
+      console.log(`Rate limited. Waiting ${waitTime}ms...`);
+      await new Promise(resolve => setTimeout(resolve, waitTime));
       continue;
     }
 
@@ -190,14 +206,22 @@ async function fetchWithRetry(url, maxRetries = 3) {
 ```python Python - Rate Limit Handling
 import time
 import requests
+from datetime import datetime
 
 def fetch_with_retry(url, max_retries=3):
     for i in range(max_retries):
         response = requests.get(url)
 
+        # Log rate limit info
+        print(f"Rate limit: {response.headers.get('x-ratelimit-remaining')} / {response.headers.get('x-ratelimit-limit')}")
+        print(f"Resets at: {response.headers.get('x-ratelimit-reset')}")
+
         if response.status_code == 429:
-            retry_after = int(response.headers.get('Retry-After', 2 ** i))
-            time.sleep(retry_after)
+            reset_time = datetime.fromisoformat(response.headers.get('x-ratelimit-reset').replace('Z', '+00:00'))
+            wait_time = max((reset_time - datetime.now()).total_seconds(), 2 ** i)
+
+            print(f"Rate limited. Waiting {wait_time}s...")
+            time.sleep(wait_time)
             continue
 
         return response.json()
