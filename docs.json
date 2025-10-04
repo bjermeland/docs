@@ -1,13 +1,13 @@
 {
   "$schema": "https://mintlify.com/docs.json",
-  "theme": "mint",
+  "theme": "maple",
   "name": "Odds-API.io",
   "colors": {
     "primary": "#c084fc",
     "light": "#c084fc",
     "dark": "#c084fc"
   },
-  "favicon": "/favicon.svg",
+  "favicon": "/favicon.ico",
   "openapi": "api-reference/openapi.json",
   "navigation": {
     "tabs": [
@@ -108,8 +108,7 @@
   },
   "footer": {
     "socials": {
-      "x": "https://x.com/oddsapi",
-      "github": "https://github.com/odds-api"
+      "x": "https://x.com/oddsapi_io"
     }
   }
 }
