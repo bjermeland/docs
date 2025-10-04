@@ -217,18 +217,20 @@ print_r($odds);
   "away": "Liverpool",
   "date": "2025-10-15T15:00:00Z",
   "status": "pending",
+  "urls": {
+    "Bet365": "https://www.bet365.com/...",
+    "Unibet": "https://www.unibet.com/...",
+    "Pinnacle": "https://www.unibet.com/..."
+  },
   "bookmakers": {
     "Bet365": [
       {
-        "name": "1X2",
+        "name": "ML",
         "odds": [
           {
             "home": "2.10",
             "draw": "3.40",
             "away": "3.20",
-            "homeLink": "https://bet365.com/...",
-            "drawLink": "https://bet365.com/...",
-            "awayLink": "https://bet365.com/..."
           }
         ],
         "updatedAt": "2025-10-04T10:30:00Z"
@@ -236,7 +238,7 @@ print_r($odds);
     ],
     "Unibet": [
       {
-        "name": "1X2",
+        "name": "ML",
         "odds": [
           {
             "home": "2.15",
@@ -245,6 +247,19 @@ print_r($odds);
           }
         ],
         "updatedAt": "2025-10-04T10:29:45Z"
+      }
+    ],
+    "Pinnacle": [
+      {
+        "name": "ML",
+        "odds": [
+          {
+            "home": "2.00",
+            "draw": "3.25",
+            "away": "3.25"
+          }
+        ],
+        "updatedAt": "2025-10-04T10:29:42Z"
       }
     ]
   }

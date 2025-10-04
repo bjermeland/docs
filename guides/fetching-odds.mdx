@@ -139,15 +139,12 @@ The odds response includes multiple markets for each bookmaker:
   "bookmakers": {
     "Bet365": [
       {
-        "name": "1X2",
+        "name": "ML",
         "odds": [
           {
             "home": "2.10",
             "draw": "3.40",
-            "away": "3.20",
-            "homeLink": "https://...",
-            "drawLink": "https://...",
-            "awayLink": "https://..."
+            "away": "3.20"
           }
         ],
         "updatedAt": "2025-10-04T10:30:00Z"
@@ -179,9 +176,9 @@ The odds response includes multiple markets for each bookmaker:
 
 ### Market Types
 
-- **1X2** - Match result (Home, Draw, Away)
-- **Asian Handicap** - Handicap betting with fractional lines
-- **Over/Under** - Total goals/points over or under a line
+- **ML** - Match result (Home, Draw, Away)
+- **Spread** - Handicap betting with fractional lines
+- **Totals** - Total goals/points over or under a line
 - **Both Teams to Score** - Yes/No markets
 - **Correct Score** - Exact score predictions
 - **And many more...**
@@ -192,7 +189,7 @@ Here's an example of comparing odds across bookmakers to find the best value:
 
 ```javascript
 function findBestOdds(oddsData) {
-  const market = '1X2';
+  const market = 'ML';
   const bestOdds = {
     home: { bookmaker: null, odds: 0, link: null },
     draw: { bookmaker: null, odds: 0, link: null },
@@ -200,32 +197,29 @@ function findBestOdds(oddsData) {
   };
 
   for (const [bookmaker, markets] of Object.entries(oddsData.bookmakers)) {
-    const market1x2 = markets.find(m => m.name === market);
-    if (!market1x2?.odds[0]) continue;
+    const marketML = markets.find(m => m.name === market);
+    if (!marketML?.odds[0]) continue;
 
-    const odds = market1x2.odds[0];
+    const odds = marketML.odds[0];
 
     if (parseFloat(odds.home) > bestOdds.home.odds) {
       bestOdds.home = {
         bookmaker,
-        odds: parseFloat(odds.home),
-        link: odds.homeLink
+        odds: parseFloat(odds.home)
       };
     }
 
     if (odds.draw && parseFloat(odds.draw) > bestOdds.draw.odds) {
       bestOdds.draw = {
         bookmaker,
-        odds: parseFloat(odds.draw),
-        link: odds.drawLink
+        odds: parseFloat(odds.draw)
       };
     }
 
     if (parseFloat(odds.away) > bestOdds.away.odds) {
       bestOdds.away = {
         bookmaker,
-        odds: parseFloat(odds.away),
-        link: odds.awayLink
+        odds: parseFloat(odds.away)
       };
     }
   }
@@ -258,22 +252,6 @@ const updatedOdds = await response.json();
 <Note>
   The `since` parameter must be a UNIX timestamp no older than 1 minute.
 </Note>
-
-## Working with Deep Links
-
-Each odds value includes a direct link to the bookmaker's bet slip:
-
-```javascript
-const odds = oddsData.bookmakers.Bet365[0].odds[0];
-
-// Direct link to place a bet on the home team
-const betLink = odds.homeLink;
-
-// Use this in your UI
-<a href={betLink} target="_blank">
-  Bet on {oddsData.home} @ {odds.home}
-</a>
-```
 
 ## Caching Strategies
 

@@ -223,7 +223,7 @@ async function monitoredFetch(url) {
 Handle missing data gracefully:
 
 ```javascript
-function getBestOdds(oddsData, market = '1X2') {
+function getBestOdds(oddsData, market = 'ML') {
   try {
     const bookmakerOdds = Object.entries(oddsData.bookmakers)
       .map(([bookmaker, markets]) => {

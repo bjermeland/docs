@@ -91,15 +91,12 @@ const oddsData = await oddsResponse.json();
   "bookmakers": {
     "Bet365": [
       {
-        "name": "1X2",
+        "name": "ML",
         "odds": [
           {
             "home": "2.10",
             "draw": "3.40",
-            "away": "3.20",
-            "homeLink": "https://bet365.com/...",
-            "drawLink": "https://bet365.com/...",
-            "awayLink": "https://bet365.com/..."
+            "away": "3.20"
           }
         ],
         "updatedAt": "2025-10-04T10:30:00Z"
@@ -107,7 +104,7 @@ const oddsData = await oddsResponse.json();
     ],
     "Pinnacle": [
       {
-        "name": "1X2",
+        "name": "ML",
         "odds": [
           {
             "home": "2.15",
@@ -120,7 +117,7 @@ const oddsData = await oddsResponse.json();
     ],
     "Unibet": [
       {
-        "name": "1X2",
+        "name": "ML",
         "odds": [
           {
             "home": "2.08",
@@ -140,7 +137,7 @@ const oddsData = await oddsResponse.json();
 Create a function to find the best odds for each outcome:
 
 ```javascript
-function findBestOdds(oddsData, market = '1X2') {
+function findBestOdds(oddsData, market = 'ML') {
   const bestOdds = {
     home: { bookmaker: null, odds: 0, link: null },
     draw: { bookmaker: null, odds: 0, link: null },
@@ -157,8 +154,7 @@ function findBestOdds(oddsData, market = '1X2') {
     if (parseFloat(odds.home) > bestOdds.home.odds) {
       bestOdds.home = {
         bookmaker,
-        odds: parseFloat(odds.home),
-        link: odds.homeLink || null
+        odds: parseFloat(odds.home)
       };
     }
 
@@ -166,8 +162,7 @@ function findBestOdds(oddsData, market = '1X2') {
     if (odds.draw && parseFloat(odds.draw) > bestOdds.draw.odds) {
       bestOdds.draw = {
         bookmaker,
-        odds: parseFloat(odds.draw),
-        link: odds.drawLink || null
+        odds: parseFloat(odds.draw)
       };
     }
 
@@ -175,8 +170,7 @@ function findBestOdds(oddsData, market = '1X2') {
     if (parseFloat(odds.away) > bestOdds.away.odds) {
       bestOdds.away = {
         bookmaker,
-        odds: parseFloat(odds.away),
-        link: odds.awayLink || null
+        odds: parseFloat(odds.away)
       };
     }
   }
@@ -207,7 +201,7 @@ Away (Liverpool): 3.25 at Unibet
 Here's how to display a comprehensive odds comparison:
 
 ```javascript
-function createComparisonTable(oddsData, market = '1X2') {
+function createComparisonTable(oddsData, market = 'ML') {
   console.log(`\n${'='.repeat(80)}`);
   console.log(`${oddsData.home} vs ${oddsData.away}`);
   console.log(`${oddsData.league.name} | ${new Date(oddsData.date).toLocaleString()}`);
@@ -396,8 +390,8 @@ app.get('/api/compare/:eventId', async (req, res) => {
       bestOdds,
       allBookmakers: Object.entries(oddsData.bookmakers).map(([name, markets]) => ({
         name,
-        odds: markets.find(m => m.name === '1X2')?.odds[0] || null,
-        updatedAt: markets.find(m => m.name === '1X2')?.updatedAt
+        odds: markets.find(m => m.name === 'ML')?.odds[0] || null,
+        updatedAt: markets.find(m => m.name === 'ML')?.updatedAt
       }))
     });
   } catch (error) {

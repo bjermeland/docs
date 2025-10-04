@@ -20,11 +20,11 @@
     "paths": {
         "/bookmakers": {
             "get": {
-                "description": "Fetch a list of supported bookmakers from Odds-API",
+                "description": "Fetch a list of supported bookmakers",
                 "tags": [
                     "Bookmakers"
                 ],
-                "summary": "Get all available bookmakers",
+                "summary": "Get Bookmakers",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -103,7 +103,7 @@
                 "tags": [
                     "Bookmakers"
                 ],
-                "summary": "Get user's selected bookmakers",
+                "summary": "Get Selected Bookmakers",
                 "parameters": [
                     {
                         "description": "API key for authentication",
@@ -181,7 +181,7 @@
                 "tags": [
                     "Bookmakers"
                 ],
-                "summary": "Clear user's selected bookmakers",
+                "summary": "Clear Selected Bookmakers",
                 "parameters": [
                     {
                         "description": "API key for authentication",
@@ -269,7 +269,7 @@
                 "tags": [
                     "Events"
                 ],
-                "summary": "Get events for a specific sport",
+                "summary": "Get Events",
                 "parameters": [
                     {
                         "description": "API key for authentication",
@@ -396,7 +396,7 @@
                 "tags": [
                     "Events"
                 ],
-                "summary": "Search for events by team or league name",
+                "summary": "Search Events",
                 "parameters": [
                     {
                         "description": "API key for authentication",
@@ -496,7 +496,7 @@
                 "tags": [
                     "Events"
                 ],
-                "summary": "Get a single event by ID",
+                "summary": "Get Event by ID",
                 "parameters": [
                     {
                         "description": "API key for authentication",
@@ -593,7 +593,7 @@
                 "tags": [
                     "Leagues"
                 ],
-                "summary": "Get all leagues for a given sport",
+                "summary": "Get Leagues",
                 "parameters": [
                     {
                         "description": "API key for authentication",
@@ -693,7 +693,7 @@
                 "tags": [
                     "Odds"
                 ],
-                "summary": "Get event odds for a specific event",
+                "summary": "Get Event Odds",
                 "parameters": [
                     {
                         "description": "API key for authentication",
@@ -795,7 +795,7 @@
                 "tags": [
                     "Odds"
                 ],
-                "summary": "Get odds for multiple events",
+                "summary": "Get Odds for Multiple Events",
                 "parameters": [
                     {
                         "description": "API key for authentication",
@@ -966,11 +966,11 @@
         },
         "/sports": {
             "get": {
-                "description": "Returns a list of supported sports with name and slug",
+                "description": "Returns a list of sports with name and slug",
                 "tags": [
                     "Sports"
                 ],
-                "summary": "Get all supported sports",
+                "summary": "Get Sports",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -1049,7 +1049,7 @@
                 "tags": [
                     "Value Bets"
                 ],
-                "summary": "Get value bets by bookmaker",
+                "summary": "Get Value Bets",
                 "parameters": [
                     {
                         "description": "API key for authentication",
@@ -1151,9 +1151,6 @@
     "servers": [
         {
             "url": "https://api.odds-api.io/v3"
-        },
-        {
-            "url": "http://api.odds-api.io/v3"
         }
     ],
     "components": {

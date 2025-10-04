@@ -50,41 +50,8 @@
             ]
           },
           {
-            "group": "Sports & Leagues",
-            "pages": [
-              "api-reference/sports/get-sports",
-              "api-reference/leagues/get-leagues"
-            ]
-          },
-          {
-            "group": "Events",
-            "pages": [
-              "api-reference/events/get-events",
-              "api-reference/events/get-event-by-id",
-              "api-reference/events/search-events"
-            ]
-          },
-          {
-            "group": "Bookmakers",
-            "pages": [
-              "api-reference/bookmakers/get-bookmakers",
-              "api-reference/bookmakers/get-selected-bookmakers",
-              "api-reference/bookmakers/clear-selected-bookmakers"
-            ]
-          },
-          {
-            "group": "Odds",
-            "pages": [
-              "api-reference/odds/get-odds",
-              "api-reference/odds/get-multi-odds",
-              "api-reference/odds/get-updated-odds"
-            ]
-          },
-          {
-            "group": "Value Bets",
-            "pages": [
-              "api-reference/value-bets/get-value-bets"
-            ]
+            "group": "API Reference",
+            "openapi": "api-reference/openapi.json"
           },
           {
             "group": "WebSocket",
@@ -104,7 +71,7 @@
         },
         {
           "anchor": "Get API Key",
-          "href": "https://odds-api.io",
+          "href": "https://odds-api.io/#pricing",
           "icon": "key"
         }
       ]
@@ -124,7 +91,7 @@
     "primary": {
       "type": "button",
       "label": "Get API Key",
-      "href": "https://odds-api.io"
+      "href": "https://odds-api.io/#pricing"
     }
   },
   "contextual": {
