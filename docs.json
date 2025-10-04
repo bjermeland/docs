@@ -23,20 +23,20 @@
             ]
           },
           {
-            "group": "Examples",
-            "pages": [
-              "examples/finding-value-bets",
-              "examples/comparing-odds",
-              "examples/player-props"
-            ]
-          },
-          {
             "group": "Guides",
             "pages": [
               "guides/fetching-odds",
               "guides/value-bets",
               "guides/websockets",
               "guides/best-practices"
+            ]
+          },
+          {
+            "group": "Examples",
+            "pages": [
+              "examples/finding-value-bets",
+              "examples/comparing-odds",
+              "examples/player-props"
             ]
           }
         ]

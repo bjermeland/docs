@@ -92,7 +92,7 @@ curl "https://api.odds-api.io/v3/events?apiKey=YOUR_API_KEY&sport=football&limit
 ```
 
 ```javascript JavaScript
-const apiKey = 'YOUR_API_KEY';
+const apiKey = process.env.ODDS_API_KEY;
 const response = await fetch(
   `https://api.odds-api.io/v3/events?apiKey=${apiKey}&sport=football&limit=10`
 );
@@ -102,8 +102,9 @@ console.log(events);
 
 ```python Python
 import requests
+import os
 
-api_key = 'YOUR_API_KEY'
+api_key = os.environ['ODDS_API_KEY']
 response = requests.get(
     'https://api.odds-api.io/v3/events',
     params={
@@ -118,7 +119,7 @@ print(events)
 
 ```php PHP
 <?php
-$apiKey = 'YOUR_API_KEY';
+$apiKey = getenv('ODDS_API_KEY');
 $url = 'https://api.odds-api.io/v3/events?' . http_build_query([
     'apiKey' => $apiKey,
     'sport' => 'football',
@@ -164,7 +165,7 @@ curl "https://api.odds-api.io/v3/odds?apiKey=YOUR_API_KEY&eventId=123456&bookmak
 ```
 
 ```javascript JavaScript
-const apiKey = 'YOUR_API_KEY';
+const apiKey = process.env.ODDS_API_KEY;
 const eventId = 123456;
 const bookmakers = 'Bet365,Unibet,Pinnacle';
 
@@ -177,8 +178,9 @@ console.log(odds);
 
 ```python Python
 import requests
+import os
 
-api_key = 'YOUR_API_KEY'
+api_key = os.environ['ODDS_API_KEY']
 event_id = 123456
 bookmakers = 'Bet365,Unibet,Pinnacle'
 
@@ -196,7 +198,7 @@ print(odds)
 
 ```php PHP
 <?php
-$apiKey = 'YOUR_API_KEY';
+$apiKey = getenv('ODDS_API_KEY');
 $eventId = 123456;
 $bookmakers = 'Bet365,Unibet,Pinnacle';
 
