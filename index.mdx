@@ -109,10 +109,57 @@ Our API provides comprehensive coverage including:
 - **Value bets** - Automatically calculated expected value opportunities
 - **Historical data** - Access to past odds and results
 
+## Try It Now
+
+See how easy it is to fetch odds data:
+
+<CodeGroup>
+
+```bash cURL
+curl "https://api.odds-api.io/v3/sports"
+```
+
+```javascript JavaScript
+const response = await fetch('https://api.odds-api.io/v3/sports');
+const sports = await response.json();
+console.log(sports);
+```
+
+```python Python
+import requests
+
+response = requests.get('https://api.odds-api.io/v3/sports')
+sports = response.json()
+print(sports)
+```
+
+</CodeGroup>
+
+<Tip>
+  This endpoint doesn't require authentication - try it right now!
+</Tip>
+
+## Pricing & Free Trial
+
+Get started with a **10-day free trial** - no credit card required:
+
+- **5,000 requests/hour** on all plans
+- Add **10K/20K/30K** additional requests packages
+- Custom enterprise solutions available
+- Cancel anytime
+
+<Card
+  title="Start Free Trial"
+  icon="rocket"
+  href="https://odds-api.io/#pricing"
+>
+  Get your API key in 30 seconds
+</Card>
+
 ## Support
 
 Need help? We're here for you:
 
 - **Email Support**: hello@odds-api.io
 - **Documentation**: Comprehensive guides and API reference
-- **Free Trial**: Test the API with a 10-day free trial
+- **Response Time**: Usually within 24 hours

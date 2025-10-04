@@ -27,7 +27,11 @@ Get up and running with Odds-API.io and fetch your first odds data.
 
 ### Step 2: Fetch available sports
 
-Let's start by fetching the list of available sports:
+Let's start by fetching the list of available sports.
+
+<Note>
+  The `/sports` endpoint doesn't require authentication - you can try it before getting your API key!
+</Note>
 
 <CodeGroup>
 
@@ -230,7 +234,7 @@ print_r($odds);
           {
             "home": "2.10",
             "draw": "3.40",
-            "away": "3.20",
+            "away": "3.20"
           }
         ],
         "updatedAt": "2025-10-04T10:30:00Z"
@@ -262,6 +266,89 @@ print_r($odds);
         "updatedAt": "2025-10-04T10:29:42Z"
       }
     ]
+  }
+}
+```
+
+## Common Use Cases
+
+Here are quick snippets for common scenarios:
+
+### Find Best Odds for a Match
+
+```javascript
+// Compare odds across bookmakers
+const bestOdds = {};
+Object.entries(odds.bookmakers).forEach(([bookmaker, markets]) => {
+  const ml = markets.find(m => m.name === 'ML')?.odds[0];
+  if (ml) {
+    if (!bestOdds.home || parseFloat(ml.home) > parseFloat(bestOdds.home.odds)) {
+      bestOdds.home = { bookmaker, odds: ml.home };
+    }
+  }
+});
+
+console.log(`Best home odds: ${bestOdds.home.odds} at ${bestOdds.home.bookmaker}`);
+```
+
+### Filter Events by League
+
+```javascript
+const apiKey = process.env.ODDS_API_KEY;
+
+// Get Premier League matches only
+const response = await fetch(
+  `https://api.odds-api.io/v3/events?apiKey=${apiKey}&sport=football&league=england-premier-league`
+);
+
+const matches = await response.json();
+console.log(`Found ${matches.length} Premier League matches`);
+```
+
+### Get Live Events
+
+```javascript
+const apiKey = process.env.ODDS_API_KEY;
+
+// Fetch events that are currently in play
+const response = await fetch(
+  `https://api.odds-api.io/v3/events?apiKey=${apiKey}&sport=football&status=live`
+);
+
+const liveMatches = await response.json();
+console.log(`${liveMatches.length} matches currently live`);
+```
+
+## Error Handling
+
+Always handle errors gracefully in production:
+
+```javascript
+async function fetchOdds(eventId) {
+  const apiKey = process.env.ODDS_API_KEY;
+
+  try {
+    const response = await fetch(
+      `https://api.odds-api.io/v3/odds?apiKey=${apiKey}&eventId=${eventId}&bookmakers=Bet365`
+    );
+
+    if (!response.ok) {
+      if (response.status === 401) {
+        throw new Error('Invalid API key');
+      }
+      if (response.status === 429) {
+        throw new Error('Rate limit exceeded - please wait before retrying');
+      }
+      if (response.status === 404) {
+        throw new Error(`Event ${eventId} not found`);
+      }
+      throw new Error(`API error: ${response.status}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error('Failed to fetch odds:', error.message);
+    throw error;
   }
 }
 ```

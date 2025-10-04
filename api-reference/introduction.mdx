@@ -5,9 +5,39 @@ description: 'Getting started with the Odds-API.io API'
 
 ## Overview
 
-Odds-API.io provides real-time sports betting odds data from multiple bookmakers across 10+ sports.
+Odds-API.io provides real-time sports betting odds data from 250+ bookmakers across 10+ sports with near-zero latency.
+
+**Key capabilities:**
+- Pre-match and live odds
+- 500+ market types (ML, spreads, totals, props, etc.)
+- Direct bet links to bookmaker sites
+- Automatic value bet calculation
+- Historical odds data
+- WebSocket real-time updates
 
 For an up-to-date list of all supported bookmakers, visit [odds-api.io/sportsbooks](https://odds-api.io/sportsbooks).
+
+## Quick Examples
+
+<Tabs>
+<Tab title="Get Events">
+```bash
+curl "https://api.odds-api.io/v3/events?apiKey=YOUR_KEY&sport=football&limit=10"
+```
+</Tab>
+
+<Tab title="Get Odds">
+```bash
+curl "https://api.odds-api.io/v3/odds?apiKey=YOUR_KEY&eventId=123456&bookmakers=Bet365,Unibet"
+```
+</Tab>
+
+<Tab title="Find Value Bets">
+```bash
+curl "https://api.odds-api.io/v3/value-bets?apiKey=YOUR_KEY&bookmaker=Bet365&includeEventDetails=true"
+```
+</Tab>
+</Tabs>
 
 ## API Endpoints
 

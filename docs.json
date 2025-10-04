@@ -26,7 +26,8 @@
             "group": "Examples",
             "pages": [
               "examples/finding-value-bets",
-              "examples/comparing-odds"
+              "examples/comparing-odds",
+              "examples/player-props"
             ]
           },
           {
