@@ -3,9 +3,9 @@
   "theme": "mint",
   "name": "Odds-API.io",
   "colors": {
-    "primary": "rgb(192 132 252/var(--tw-text-opacity,1))",
-    "light": "rgb(192 132 252/var(--tw-text-opacity,1))",
-    "dark": "rgb(192 132 252/var(--tw-text-opacity,1))"
+    "primary": "#c084fc",
+    "light": "#c084fc",
+    "dark": "#c084fc"
   },
   "favicon": "/favicon.svg",
   "openapi": "/api-reference/openapi.json",
