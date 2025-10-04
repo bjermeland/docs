@@ -1,0 +1,360 @@
+---
+title: "Value Bets"
+description: "Learn how to identify and utilize value betting opportunities"
+---
+
+## What are Value Bets?
+
+A value bet occurs when the probability of an outcome is greater than what the bookmaker's odds imply. The Odds-API.io automatically calculates expected value (EV) by comparing individual bookmaker odds against the market average.
+
+## How Value Bets Work
+
+The API calculates value by:
+1. Analyzing odds from all available bookmakers
+2. Calculating the "true" probability using market consensus
+3. Comparing each bookmaker's odds to this probability
+4. Identifying opportunities where odds are higher than expected
+
+**Formula:**
+```
+Expected Value (EV) = (Probability × Odds) - 1
+```
+
+A positive EV indicates a value bet.
+
+## Fetching Value Bets
+
+Use the `/v3/value-bets` endpoint to get current value betting opportunities:
+
+<CodeGroup>
+
+```javascript JavaScript
+const apiKey = process.env.ODDS_API_KEY;
+const bookmaker = 'Bet365';
+const includeEventDetails = true;
+
+const response = await fetch(
+  `https://api.odds-api.io/v3/value-bets?apiKey=${apiKey}&bookmaker=${bookmaker}&includeEventDetails=${includeEventDetails}`
+);
+
+const valueBets = await response.json();
+console.log(valueBets);
+```
+
+```python Python
+import requests
+import os
+
+api_key = os.environ['ODDS_API_KEY']
+bookmaker = 'Bet365'
+include_event_details = True
+
+response = requests.get(
+    'https://api.odds-api.io/v3/value-bets',
+    params={
+        'apiKey': api_key,
+        'bookmaker': bookmaker,
+        'includeEventDetails': include_event_details
+    }
+)
+
+value_bets = response.json()
+print(value_bets)
+```
+
+```php PHP
+<?php
+$apiKey = getenv('ODDS_API_KEY');
+$bookmaker = 'Bet365';
+$includeEventDetails = true;
+
+$url = 'https://api.odds-api.io/v3/value-bets?' . http_build_query([
+    'apiKey' => $apiKey,
+    'bookmaker' => $bookmaker,
+    'includeEventDetails' => $includeEventDetails
+]);
+
+$response = file_get_contents($url);
+$valueBets = json_decode($response, true);
+print_r($valueBets);
+```
+
+</CodeGroup>
+
+## Response Format
+
+```json
+[
+  {
+    "id": "vb_123456_bet365_home",
+    "eventId": 123456,
+    "bookmaker": "Bet365",
+    "market": {
+      "name": "1X2",
+      "home": "2.10",
+      "draw": "3.40",
+      "away": "3.20",
+      "hdp": null,
+      "max": null
+    },
+    "betSide": "home",
+    "expectedValue": 0.0523,
+    "expectedValueUpdatedAt": "2025-10-04T10:30:00Z",
+    "bookmakerOdds": {
+      "home": "2.10",
+      "draw": "3.40",
+      "away": "3.20",
+      "homeDirectLink": "https://bet365.com/...",
+      "drawDirectLink": "https://bet365.com/...",
+      "awayDirectLink": "https://bet365.com/...",
+      "href": "https://bet365.com/..."
+    },
+    "event": {
+      "home": "Manchester United",
+      "away": "Liverpool",
+      "date": "2025-10-15T15:00:00Z",
+      "sport": "Football",
+      "league": "England - Premier League"
+    }
+  }
+]
+```
+
+## Understanding the Response
+
+| Field | Description |
+|-------|-------------|
+| `expectedValue` | The calculated EV (positive means value) |
+| `betSide` | Which outcome has value (home, draw, away, over, under, etc.) |
+| `market` | Market odds used for comparison |
+| `bookmakerOdds` | Current odds at the bookmaker |
+| `event` | Match details (when `includeEventDetails=true`) |
+
+## Filtering Value Bets
+
+Filter value bets to find the most profitable opportunities:
+
+```javascript
+function filterValueBets(valueBets, minEV = 0.03) {
+  return valueBets
+    .filter(bet => bet.expectedValue >= minEV)
+    .sort((a, b) => b.expectedValue - a.expectedValue);
+}
+
+// Get value bets with at least 3% expected value
+const topValueBets = filterValueBets(valueBets, 0.03);
+
+topValueBets.forEach(bet => {
+  const evPercent = (bet.expectedValue * 100).toFixed(2);
+  console.log(`${bet.event.home} vs ${bet.event.away}`);
+  console.log(`Bet on: ${bet.betSide}`);
+  console.log(`EV: ${evPercent}%`);
+  console.log(`Odds: ${bet.bookmakerOdds[bet.betSide]}`);
+  console.log('---');
+});
+```
+
+## Real-Time Value Bet Monitoring
+
+Value bets are updated every **5 seconds**. Here's how to build a monitoring system:
+
+```javascript
+async function monitorValueBets(bookmaker, minEV = 0.03) {
+  const apiKey = process.env.ODDS_API_KEY;
+
+  async function fetchAndProcess() {
+    try {
+      const response = await fetch(
+        `https://api.odds-api.io/v3/value-bets?apiKey=${apiKey}&bookmaker=${bookmaker}&includeEventDetails=true`
+      );
+      const valueBets = await response.json();
+
+      const filtered = valueBets.filter(bet => bet.expectedValue >= minEV);
+
+      filtered.forEach(bet => {
+        notifyUser(bet); // Send notification to users
+        logBet(bet); // Log for analytics
+      });
+    } catch (error) {
+      console.error('Error fetching value bets:', error);
+    }
+  }
+
+  // Initial fetch
+  await fetchAndProcess();
+
+  // Poll every 5 seconds
+  setInterval(fetchAndProcess, 5000);
+}
+
+// Start monitoring
+monitorValueBets('Bet365', 0.03);
+```
+
+## Multi-Bookmaker Strategy
+
+Monitor value bets across multiple bookmakers:
+
+```javascript
+const bookmakers = ['Bet365', 'Unibet', 'Pinnacle', 'William Hill'];
+
+async function getAllValueBets(minEV = 0.03) {
+  const apiKey = process.env.ODDS_API_KEY;
+
+  const promises = bookmakers.map(bookmaker =>
+    fetch(
+      `https://api.odds-api.io/v3/value-bets?apiKey=${apiKey}&bookmaker=${bookmaker}&includeEventDetails=true`
+    ).then(res => res.json())
+  );
+
+  const results = await Promise.all(promises);
+
+  // Flatten and filter
+  const allValueBets = results
+    .flat()
+    .filter(bet => bet.expectedValue >= minEV)
+    .sort((a, b) => b.expectedValue - a.expectedValue);
+
+  return allValueBets;
+}
+
+const topBets = await getAllValueBets(0.03);
+```
+
+## Building a Value Bet Alert System
+
+```javascript
+class ValueBetAlerter {
+  constructor(apiKey, minEV = 0.03) {
+    this.apiKey = apiKey;
+    this.minEV = minEV;
+    this.seenBets = new Set();
+  }
+
+  async checkForNewValueBets(bookmaker) {
+    const response = await fetch(
+      `https://api.odds-api.io/v3/value-bets?apiKey=${this.apiKey}&bookmaker=${bookmaker}&includeEventDetails=true`
+    );
+    const valueBets = await response.json();
+
+    const newBets = valueBets.filter(bet => {
+      if (bet.expectedValue < this.minEV) return false;
+      if (this.seenBets.has(bet.id)) return false;
+
+      this.seenBets.add(bet.id);
+      return true;
+    });
+
+    return newBets;
+  }
+
+  async sendAlert(bet) {
+    const message = `
+      🎯 Value Bet Alert!
+
+      ${bet.event.home} vs ${bet.event.away}
+      League: ${bet.event.league}
+      Sport: ${bet.event.sport}
+
+      Market: ${bet.market.name}
+      Bet on: ${bet.betSide}
+      Odds: ${bet.bookmakerOdds[bet.betSide]}
+      Expected Value: ${(bet.expectedValue * 100).toFixed(2)}%
+
+      Bookmaker: ${bet.bookmaker}
+      Place bet: ${bet.bookmakerOdds.href}
+    `;
+
+    // Send to your notification system
+    // (Email, SMS, Discord, Telegram, etc.)
+    console.log(message);
+  }
+
+  async monitor(bookmakers) {
+    for (const bookmaker of bookmakers) {
+      const newBets = await this.checkForNewValueBets(bookmaker);
+      newBets.forEach(bet => this.sendAlert(bet));
+    }
+
+    // Check every 5 seconds
+    setTimeout(() => this.monitor(bookmakers), 5000);
+  }
+}
+
+// Usage
+const alerter = new ValueBetAlerter(process.env.ODDS_API_KEY, 0.03);
+alerter.monitor(['Bet365', 'Unibet', 'Pinnacle']);
+```
+
+## Best Practices
+
+<AccordionGroup>
+  <Accordion title="Set Realistic EV Thresholds">
+    Start with a minimum EV of 3-5%. Lower thresholds will generate more alerts but may include less significant opportunities.
+  </Accordion>
+
+  <Accordion title="Monitor Multiple Bookmakers">
+    Different bookmakers have different inefficiencies. Monitor several bookmakers to maximize opportunities.
+  </Accordion>
+
+  <Accordion title="Act Quickly">
+    Value bets can disappear quickly as bookmakers adjust odds. Implement fast notification systems.
+  </Accordion>
+
+  <Accordion title="Track Performance">
+    Log all value bets and outcomes to analyze the accuracy of the expected value calculations over time.
+  </Accordion>
+
+  <Accordion title="Consider Stake Sizing">
+    Use the Kelly Criterion or similar methods to determine optimal stake sizes based on expected value.
+  </Accordion>
+</AccordionGroup>
+
+## Kelly Criterion Example
+
+Calculate optimal stake using the Kelly Criterion:
+
+```javascript
+function calculateKellyStake(probability, odds, bankroll, kellyFraction = 0.25) {
+  // Kelly = (probability * odds - 1) / (odds - 1)
+  const kelly = (probability * odds - 1) / (odds - 1);
+
+  // Use fractional Kelly for safety (e.g., 25% of full Kelly)
+  const fractionalKelly = kelly * kellyFraction;
+
+  // Calculate stake
+  const stake = bankroll * fractionalKelly;
+
+  return Math.max(0, stake); // Don't bet if negative
+}
+
+// Example
+const bet = valueBets[0];
+const impliedProb = 1 / parseFloat(bet.bookmakerOdds[bet.betSide]);
+const trueProbability = impliedProb * (1 + bet.expectedValue);
+const odds = parseFloat(bet.bookmakerOdds[bet.betSide]);
+const bankroll = 1000;
+
+const stake = calculateKellyStake(trueProbability, odds, bankroll);
+console.log(`Recommended stake: $${stake.toFixed(2)}`);
+```
+
+## Limitations & Considerations
+
+<Warning>
+  - Value bets are **theoretical** - actual profitability depends on many factors
+  - Bookmakers may limit accounts that consistently find value
+  - Odds can change between viewing and placing a bet
+  - Not all value bets will win (that's the nature of probability)
+</Warning>
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Fetching Odds" icon="chart-line" href="/guides/fetching-odds">
+    Learn more about working with odds data
+  </Card>
+  <Card title="Best Practices" icon="lightbulb" href="/guides/best-practices">
+    Optimize your API usage
+  </Card>
+</CardGroup>

@@ -1,68 +1,83 @@
 {
   "$schema": "https://mintlify.com/docs.json",
   "theme": "mint",
-  "name": "Mint Starter Kit",
+  "name": "Odds-API.io",
   "colors": {
     "primary": "#16A34A",
     "light": "#07C983",
     "dark": "#15803D"
   },
   "favicon": "/favicon.svg",
+  "openapi": "/api-reference/openapi.json",
   "navigation": {
     "tabs": [
       {
-        "tab": "Guides",
+        "tab": "Documentation",
         "groups": [
           {
-            "group": "Getting started",
+            "group": "Getting Started",
             "pages": [
               "index",
               "quickstart",
-              "development"
+              "authentication"
             ]
           },
           {
-            "group": "Customization",
+            "group": "Examples",
             "pages": [
-              "essentials/settings",
-              "essentials/navigation"
+              "examples/finding-value-bets",
+              "examples/comparing-odds"
             ]
           },
           {
-            "group": "Writing content",
+            "group": "Guides",
             "pages": [
-              "essentials/markdown",
-              "essentials/code",
-              "essentials/images",
-              "essentials/reusable-snippets"
-            ]
-          },
-          {
-            "group": "AI tools",
-            "pages": [
-              "ai-tools/cursor",
-              "ai-tools/claude-code",
-              "ai-tools/windsurf"
+              "guides/fetching-odds",
+              "guides/value-bets",
+              "guides/websockets",
+              "guides/best-practices"
             ]
           }
         ]
       },
       {
-        "tab": "API reference",
+        "tab": "API Reference",
         "groups": [
           {
-            "group": "API documentation",
+            "group": "Sports & Leagues",
             "pages": [
-              "api-reference/introduction"
+              "api-reference/sports/get-sports",
+              "api-reference/leagues/get-leagues"
             ]
           },
           {
-            "group": "Endpoint examples",
+            "group": "Events",
             "pages": [
-              "api-reference/endpoint/get",
-              "api-reference/endpoint/create",
-              "api-reference/endpoint/delete",
-              "api-reference/endpoint/webhook"
+              "api-reference/events/get-events",
+              "api-reference/events/get-event-by-id",
+              "api-reference/events/search-events"
+            ]
+          },
+          {
+            "group": "Bookmakers",
+            "pages": [
+              "api-reference/bookmakers/get-bookmakers",
+              "api-reference/bookmakers/get-selected-bookmakers",
+              "api-reference/bookmakers/clear-selected-bookmakers"
+            ]
+          },
+          {
+            "group": "Odds",
+            "pages": [
+              "api-reference/odds/get-odds",
+              "api-reference/odds/get-multi-odds",
+              "api-reference/odds/get-updated-odds"
+            ]
+          },
+          {
+            "group": "Value Bets",
+            "pages": [
+              "api-reference/value-bets/get-value-bets"
             ]
           }
         ]
@@ -71,14 +86,14 @@
     "global": {
       "anchors": [
         {
-          "anchor": "Documentation",
-          "href": "https://mintlify.com/docs",
-          "icon": "book-open-cover"
+          "anchor": "API Dashboard",
+          "href": "https://odds-api.io",
+          "icon": "chart-line"
         },
         {
-          "anchor": "Blog",
-          "href": "https://mintlify.com/blog",
-          "icon": "newspaper"
+          "anchor": "Get API Key",
+          "href": "https://odds-api.io",
+          "icon": "key"
         }
       ]
     }
@@ -91,13 +106,13 @@
     "links": [
       {
         "label": "Support",
-        "href": "mailto:hi@mintlify.com"
+        "href": "mailto:hello@odds-api.io"
       }
     ],
     "primary": {
       "type": "button",
-      "label": "Dashboard",
-      "href": "https://dashboard.mintlify.com"
+      "label": "Get API Key",
+      "href": "https://odds-api.io"
     }
   },
   "contextual": {
@@ -114,9 +129,8 @@
   },
   "footer": {
     "socials": {
-      "x": "https://x.com/mintlify",
-      "github": "https://github.com/mintlify",
-      "linkedin": "https://linkedin.com/company/mintlify"
+      "x": "https://x.com/oddsapi",
+      "github": "https://github.com/odds-api"
     }
   }
 }

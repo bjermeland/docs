@@ -1,0 +1,511 @@
+---
+title: "Comparing Odds Across Bookmakers"
+description: "Build an odds comparison tool to find the best prices"
+---
+
+# Build an Odds Comparison Tool
+
+One of the most powerful use cases for the Odds-API.io is building odds comparison platforms. By comparing odds across 250+ bookmakers, you can help bettors find the best prices and maximize their potential returns.
+
+## Why Compare Odds?
+
+Different bookmakers offer different odds for the same event. Even small differences can significantly impact long-term profitability:
+
+- **Bet365** offers 2.10 for Manchester United to win
+- **Pinnacle** offers 2.15 for the same outcome
+- **Unibet** offers 2.08
+
+By consistently betting at the best odds, a bettor can increase their returns by **5-10% over time**.
+
+## Example: Premier League Match
+
+Let's compare odds for a Premier League match between Manchester United and Liverpool.
+
+### Step 1: Fetch Events
+
+First, get upcoming Premier League matches:
+
+```javascript
+const apiKey = process.env.ODDS_API_KEY;
+
+const response = await fetch(
+  `https://api.odds-api.io/v3/events?apiKey=${apiKey}&sport=football&league=england-premier-league&status=pending&limit=10`
+);
+
+const events = await response.json();
+console.log(events);
+```
+
+**Response:**
+```json
+[
+  {
+    "id": 123456,
+    "sport": {
+      "name": "Football",
+      "slug": "football"
+    },
+    "league": {
+      "name": "Premier League",
+      "slug": "england-premier-league"
+    },
+    "home": "Manchester United",
+    "away": "Liverpool",
+    "date": "2025-10-15T15:00:00Z",
+    "status": "pending"
+  }
+]
+```
+
+### Step 2: Fetch Odds from Multiple Bookmakers
+
+Now get odds from popular bookmakers:
+
+```javascript
+const eventId = 123456;
+const bookmakers = 'Bet365,Pinnacle,Unibet,William Hill,Betway';
+
+const oddsResponse = await fetch(
+  `https://api.odds-api.io/v3/odds?apiKey=${apiKey}&eventId=${eventId}&bookmakers=${bookmakers}`
+);
+
+const oddsData = await oddsResponse.json();
+```
+
+**Response:**
+```json
+{
+  "id": 123456,
+  "home": "Manchester United",
+  "away": "Liverpool",
+  "date": "2025-10-15T15:00:00Z",
+  "status": "pending",
+  "sport": {
+    "name": "Football",
+    "slug": "football"
+  },
+  "league": {
+    "name": "Premier League",
+    "slug": "england-premier-league"
+  },
+  "bookmakers": {
+    "Bet365": [
+      {
+        "name": "1X2",
+        "odds": [
+          {
+            "home": "2.10",
+            "draw": "3.40",
+            "away": "3.20",
+            "homeLink": "https://bet365.com/...",
+            "drawLink": "https://bet365.com/...",
+            "awayLink": "https://bet365.com/..."
+          }
+        ],
+        "updatedAt": "2025-10-04T10:30:00Z"
+      }
+    ],
+    "Pinnacle": [
+      {
+        "name": "1X2",
+        "odds": [
+          {
+            "home": "2.15",
+            "draw": "3.35",
+            "away": "3.15"
+          }
+        ],
+        "updatedAt": "2025-10-04T10:29:50Z"
+      }
+    ],
+    "Unibet": [
+      {
+        "name": "1X2",
+        "odds": [
+          {
+            "home": "2.08",
+            "draw": "3.45",
+            "away": "3.25"
+          }
+        ],
+        "updatedAt": "2025-10-04T10:30:15Z"
+      }
+    ]
+  }
+}
+```
+
+### Step 3: Find the Best Odds
+
+Create a function to find the best odds for each outcome:
+
+```javascript
+function findBestOdds(oddsData, market = '1X2') {
+  const bestOdds = {
+    home: { bookmaker: null, odds: 0, link: null },
+    draw: { bookmaker: null, odds: 0, link: null },
+    away: { bookmaker: null, odds: 0, link: null }
+  };
+
+  for (const [bookmaker, markets] of Object.entries(oddsData.bookmakers)) {
+    const targetMarket = markets.find(m => m.name === market);
+    if (!targetMarket?.odds[0]) continue;
+
+    const odds = targetMarket.odds[0];
+
+    // Check home odds
+    if (parseFloat(odds.home) > bestOdds.home.odds) {
+      bestOdds.home = {
+        bookmaker,
+        odds: parseFloat(odds.home),
+        link: odds.homeLink || null
+      };
+    }
+
+    // Check draw odds
+    if (odds.draw && parseFloat(odds.draw) > bestOdds.draw.odds) {
+      bestOdds.draw = {
+        bookmaker,
+        odds: parseFloat(odds.draw),
+        link: odds.drawLink || null
+      };
+    }
+
+    // Check away odds
+    if (parseFloat(odds.away) > bestOdds.away.odds) {
+      bestOdds.away = {
+        bookmaker,
+        odds: parseFloat(odds.away),
+        link: odds.awayLink || null
+      };
+    }
+  }
+
+  return bestOdds;
+}
+
+// Usage
+const bestOdds = findBestOdds(oddsData);
+
+console.log('\nBest Odds for Manchester United vs Liverpool:\n');
+console.log(`Home (${oddsData.home}): ${bestOdds.home.odds} at ${bestOdds.home.bookmaker}`);
+console.log(`Draw: ${bestOdds.draw.odds} at ${bestOdds.draw.bookmaker}`);
+console.log(`Away (${oddsData.away}): ${bestOdds.away.odds} at ${bestOdds.away.bookmaker}`);
+```
+
+**Output:**
+```
+Best Odds for Manchester United vs Liverpool:
+
+Home (Manchester United): 2.15 at Pinnacle
+Draw: 3.45 at Unibet
+Away (Liverpool): 3.25 at Unibet
+```
+
+## Building a Complete Comparison Table
+
+Here's how to display a comprehensive odds comparison:
+
+```javascript
+function createComparisonTable(oddsData, market = '1X2') {
+  console.log(`\n${'='.repeat(80)}`);
+  console.log(`${oddsData.home} vs ${oddsData.away}`);
+  console.log(`${oddsData.league.name} | ${new Date(oddsData.date).toLocaleString()}`);
+  console.log(`${'='.repeat(80)}\n`);
+
+  console.log('Bookmaker'.padEnd(20) + 'Home'.padEnd(15) + 'Draw'.padEnd(15) + 'Away'.padEnd(15) + 'Updated');
+  console.log('-'.repeat(80));
+
+  const bookmakerOdds = [];
+
+  for (const [bookmaker, markets] of Object.entries(oddsData.bookmakers)) {
+    const targetMarket = markets.find(m => m.name === market);
+    if (!targetMarket?.odds[0]) continue;
+
+    const odds = targetMarket.odds[0];
+    bookmakerOdds.push({
+      bookmaker,
+      home: odds.home || '-',
+      draw: odds.draw || '-',
+      away: odds.away || '-',
+      updated: new Date(targetMarket.updatedAt).toLocaleTimeString()
+    });
+  }
+
+  // Sort by home odds (highest first)
+  bookmakerOdds.sort((a, b) => parseFloat(b.home) - parseFloat(a.home));
+
+  bookmakerOdds.forEach(row => {
+    console.log(
+      row.bookmaker.padEnd(20) +
+      row.home.padEnd(15) +
+      row.draw.padEnd(15) +
+      row.away.padEnd(15) +
+      row.updated
+    );
+  });
+
+  console.log('-'.repeat(80));
+
+  // Show best odds for each outcome
+  const best = findBestOdds(oddsData, market);
+  console.log('\nBest Odds:');
+  console.log(`  Home: ${best.home.odds} (${best.home.bookmaker})`);
+  console.log(`  Draw: ${best.draw.odds} (${best.draw.bookmaker})`);
+  console.log(`  Away: ${best.away.odds} (${best.away.bookmaker})`);
+}
+
+createComparisonTable(oddsData);
+```
+
+**Output:**
+```
+================================================================================
+Manchester United vs Liverpool
+Premier League | 10/15/2025, 3:00:00 PM
+================================================================================
+
+Bookmaker           Home           Draw           Away           Updated
+--------------------------------------------------------------------------------
+Pinnacle            2.15           3.35           3.15           10:29:50 AM
+Bet365              2.10           3.40           3.20           10:30:00 AM
+Unibet              2.08           3.45           3.25           10:30:15 AM
+William Hill        2.05           3.40           3.30           10:29:45 AM
+Betway              2.12           3.38           3.18           10:30:10 AM
+--------------------------------------------------------------------------------
+
+Best Odds:
+  Home: 2.15 (Pinnacle)
+  Draw: 3.45 (Unibet)
+  Away: 3.30 (William Hill)
+```
+
+## Calculating Potential Returns
+
+Show users how much more they can win by choosing the best odds:
+
+```javascript
+function calculateReturns(stake, odds) {
+  const returns = stake * odds;
+  const profit = returns - stake;
+
+  return {
+    returns: returns.toFixed(2),
+    profit: profit.toFixed(2)
+  };
+}
+
+function compareReturns(stake, bestOdds, averageOdds) {
+  const best = calculateReturns(stake, bestOdds);
+  const average = calculateReturns(stake, averageOdds);
+
+  const extraProfit = (best.profit - average.profit).toFixed(2);
+  const percentageGain = ((extraProfit / average.profit) * 100).toFixed(1);
+
+  console.log(`\nBetting $${stake} on Manchester United to win:\n`);
+  console.log(`Best odds (${bestOdds}):      $${best.returns} return, $${best.profit} profit`);
+  console.log(`Average odds (${averageOdds}): $${average.returns} return, $${average.profit} profit`);
+  console.log(`\nExtra profit: $${extraProfit} (+${percentageGain}%)`);
+}
+
+// Example: $100 bet
+compareReturns(100, 2.15, 2.10);
+```
+
+**Output:**
+```
+Betting $100 on Manchester United to win:
+
+Best odds (2.15):      $215.00 return, $115.00 profit
+Average odds (2.10):   $210.00 return, $110.00 profit
+
+Extra profit: $5.00 (+4.5%)
+```
+
+## Monitoring Multiple Events
+
+Compare odds for all upcoming matches in a league:
+
+```javascript
+async function compareLeagueOdds(sport, league) {
+  const apiKey = process.env.ODDS_API_KEY;
+
+  // Get all pending events
+  const eventsRes = await fetch(
+    `https://api.odds-api.io/v3/events?apiKey=${apiKey}&sport=${sport}&league=${league}&status=pending&limit=20`
+  );
+  const events = await eventsRes.json();
+
+  console.log(`\nFound ${events.length} upcoming matches in ${league}\n`);
+
+  // Get odds for up to 10 events at once using multi-odds endpoint
+  const eventIds = events.slice(0, 10).map(e => e.id).join(',');
+  const bookmakers = 'Bet365,Pinnacle,Unibet,William Hill,Betway';
+
+  const oddsRes = await fetch(
+    `https://api.odds-api.io/v3/odds/multi?apiKey=${apiKey}&eventIds=${eventIds}&bookmakers=${bookmakers}`
+  );
+  const allOdds = await oddsRes.json();
+
+  // Display comparison for each match
+  allOdds.forEach(oddsData => {
+    const best = findBestOdds(oddsData);
+
+    console.log(`${oddsData.home} vs ${oddsData.away}`);
+    console.log(`  Best Home: ${best.home.odds} (${best.home.bookmaker})`);
+    console.log(`  Best Draw: ${best.draw.odds} (${best.draw.bookmaker})`);
+    console.log(`  Best Away: ${best.away.odds} (${best.away.bookmaker})`);
+    console.log('');
+  });
+}
+
+// Compare all Premier League matches
+compareLeagueOdds('football', 'england-premier-league');
+```
+
+## Building a Web Interface
+
+Create a simple odds comparison dashboard:
+
+```javascript
+// Express.js example
+const express = require('express');
+const app = express();
+
+app.get('/api/compare/:eventId', async (req, res) => {
+  const apiKey = process.env.ODDS_API_KEY;
+  const { eventId } = req.params;
+  const bookmakers = 'Bet365,Pinnacle,Unibet,William Hill,Betway,DraftKings,FanDuel';
+
+  try {
+    const response = await fetch(
+      `https://api.odds-api.io/v3/odds?apiKey=${apiKey}&eventId=${eventId}&bookmakers=${bookmakers}`
+    );
+
+    const oddsData = await response.json();
+    const bestOdds = findBestOdds(oddsData);
+
+    res.json({
+      event: {
+        id: oddsData.id,
+        home: oddsData.home,
+        away: oddsData.away,
+        date: oddsData.date,
+        league: oddsData.league.name
+      },
+      bestOdds,
+      allBookmakers: Object.entries(oddsData.bookmakers).map(([name, markets]) => ({
+        name,
+        odds: markets.find(m => m.name === '1X2')?.odds[0] || null,
+        updatedAt: markets.find(m => m.name === '1X2')?.updatedAt
+      }))
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.listen(3000, () => {
+  console.log('Odds comparison API running on port 3000');
+});
+```
+
+## React Component Example
+
+```jsx
+import { useState, useEffect } from 'react';
+
+function OddsComparison({ eventId }) {
+  const [odds, setOdds] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch(`/api/compare/${eventId}`)
+      .then(res => res.json())
+      .then(data => {
+        setOdds(data);
+        setLoading(false);
+      });
+  }, [eventId]);
+
+  if (loading) return <div>Loading odds...</div>;
+
+  return (
+    <div className="odds-comparison">
+      <h2>{odds.event.home} vs {odds.event.away}</h2>
+      <p>{odds.event.league}</p>
+
+      <div className="best-odds">
+        <h3>Best Odds</h3>
+        <div className="outcome">
+          <span>Home: {odds.bestOdds.home.odds}</span>
+          <small>{odds.bestOdds.home.bookmaker}</small>
+        </div>
+        <div className="outcome">
+          <span>Draw: {odds.bestOdds.draw.odds}</span>
+          <small>{odds.bestOdds.draw.bookmaker}</small>
+        </div>
+        <div className="outcome">
+          <span>Away: {odds.bestOdds.away.odds}</span>
+          <small>{odds.bestOdds.away.bookmaker}</small>
+        </div>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Bookmaker</th>
+            <th>Home</th>
+            <th>Draw</th>
+            <th>Away</th>
+          </tr>
+        </thead>
+        <tbody>
+          {odds.allBookmakers.map(bookmaker => (
+            <tr key={bookmaker.name}>
+              <td>{bookmaker.name}</td>
+              <td>{bookmaker.odds?.home || '-'}</td>
+              <td>{bookmaker.odds?.draw || '-'}</td>
+              <td>{bookmaker.odds?.away || '-'}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+```
+
+## Key Takeaways
+
+<CardGroup cols={2}>
+  <Card title="Always Compare" icon="balance-scale">
+    Different bookmakers offer different odds for the same event—always compare before betting
+  </Card>
+  <Card title="Maximize Returns" icon="chart-line">
+    Consistently betting at the best odds can increase returns by 5-10% over time
+  </Card>
+  <Card title="Use Multi-Odds" icon="layer-group">
+    Fetch odds for up to 10 events in a single API call to save on requests
+  </Card>
+  <Card title="Update Frequently" icon="rotate">
+    Odds change rapidly—update your comparisons every 30-60 seconds for pre-match
+  </Card>
+</CardGroup>
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Finding Value Bets" icon="magnifying-glass-dollar" href="/examples/finding-value-bets">
+    Learn how to identify profitable betting opportunities
+  </Card>
+  <Card title="Fetching Odds Guide" icon="book" href="/guides/fetching-odds">
+    Deep dive into the Odds API endpoints
+  </Card>
+  <Card title="Best Practices" icon="lightbulb" href="/guides/best-practices">
+    Optimize your implementation
+  </Card>
+  <Card title="API Reference" icon="code" href="/api-reference/odds/get-odds">
+    Explore the full Odds API documentation
+  </Card>
+</CardGroup>

@@ -1,0 +1,685 @@
+---
+title: "Best Practices"
+description: "Optimize your Odds-API.io implementation"
+---
+
+## Performance Optimization
+
+### 1. Use Batch Endpoints
+
+Always use the multi-odds endpoint when fetching odds for multiple events:
+
+**Bad:**
+```javascript
+// ❌ Makes 10 API requests
+for (const eventId of eventIds) {
+  const odds = await fetchOdds(eventId);
+}
+```
+
+**Good:**
+```javascript
+// ✅ Makes 1 API request
+const eventIds = '123456,123457,123458'; // Up to 10 events
+const odds = await fetchMultiOdds(eventIds);
+```
+
+### 2. Implement Caching
+
+Cache responses based on data type and freshness requirements:
+
+```javascript
+const cache = new Map();
+
+function getCacheKey(endpoint, params) {
+  return `${endpoint}:${JSON.stringify(params)}`;
+}
+
+async function cachedFetch(endpoint, params, ttl = 60000) {
+  const key = getCacheKey(endpoint, params);
+  const cached = cache.get(key);
+
+  if (cached && Date.now() - cached.timestamp < ttl) {
+    return cached.data;
+  }
+
+  const data = await fetch(endpoint, params);
+  cache.set(key, { data, timestamp: Date.now() });
+
+  return data;
+}
+
+// Usage
+const sports = await cachedFetch('/sports', {}, 3600000); // Cache for 1 hour
+const events = await cachedFetch('/events', { sport: 'football' }, 300000); // 5 minutes
+const odds = await cachedFetch('/odds', { eventId: 123 }, 30000); // 30 seconds
+```
+
+**Recommended Cache TTLs:**
+
+| Data Type | TTL | Reason |
+|-----------|-----|--------|
+| Sports list | 1 hour+ | Rarely changes |
+| Leagues list | 1 hour | Rarely changes |
+| Pre-match events | 5-10 minutes | Updated periodically |
+| Pre-match odds | 30-60 seconds | Changes frequently |
+| Live events | 10-30 seconds | Changes very frequently |
+| Live odds | 5-10 seconds | Changes in real-time |
+
+### 3. Select Bookmakers Wisely
+
+Don't fetch odds from all 250+ bookmakers:
+
+```javascript
+// ✅ Select relevant bookmakers for your region
+const popularEUBookmakers = [
+  'Bet365',
+  'Unibet',
+  'William Hill',
+  'Betway',
+  'Bwin'
+];
+
+const popularUSBookmakers = [
+  'FanDuel',
+  'DraftKings',
+  'BetMGM',
+  'Caesars'
+];
+
+// Fetch odds only from relevant bookmakers
+const odds = await fetchOdds(eventId, popularEUBookmakers.join(','));
+```
+
+## Rate Limit Management
+
+### 1. Implement Rate Limiting
+
+Track and respect API rate limits:
+
+```javascript
+class RateLimiter {
+  constructor(requestsPerMinute) {
+    this.limit = requestsPerMinute;
+    this.requests = [];
+  }
+
+  async waitForSlot() {
+    const now = Date.now();
+    const minute = 60 * 1000;
+
+    // Remove requests older than 1 minute
+    this.requests = this.requests.filter(time => now - time < minute);
+
+    // Wait if at limit
+    if (this.requests.length >= this.limit) {
+      const oldestRequest = this.requests[0];
+      const waitTime = minute - (now - oldestRequest);
+      await new Promise(resolve => setTimeout(resolve, waitTime));
+      return this.waitForSlot();
+    }
+
+    this.requests.push(now);
+  }
+
+  async execute(fn) {
+    await this.waitForSlot();
+    return fn();
+  }
+}
+
+// Usage
+const limiter = new RateLimiter(30); // 30 requests per minute
+
+async function fetchOdds(eventId) {
+  return limiter.execute(() =>
+    fetch(`https://api.odds-api.io/v3/odds?apiKey=${apiKey}&eventId=${eventId}`)
+  );
+}
+```
+
+### 2. Handle 429 Responses
+
+Implement exponential backoff for rate limit errors:
+
+```javascript
+async function fetchWithRetry(url, maxRetries = 3) {
+  for (let i = 0; i < maxRetries; i++) {
+    try {
+      const response = await fetch(url);
+
+      if (response.status === 429) {
+        const retryAfter = response.headers.get('Retry-After');
+        const delay = retryAfter ? parseInt(retryAfter) * 1000 : Math.pow(2, i) * 1000;
+
+        console.log(`Rate limited. Retrying in ${delay}ms...`);
+        await new Promise(resolve => setTimeout(resolve, delay));
+        continue;
+      }
+
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+
+      return response.json();
+    } catch (error) {
+      if (i === maxRetries - 1) throw error;
+    }
+  }
+}
+```
+
+### 3. Monitor Usage
+
+Track your API usage to avoid hitting limits:
+
+```javascript
+class UsageTracker {
+  constructor() {
+    this.requestCount = 0;
+    this.startTime = Date.now();
+  }
+
+  recordRequest() {
+    this.requestCount++;
+  }
+
+  getStats() {
+    const elapsed = (Date.now() - this.startTime) / 1000 / 60; // minutes
+    const requestsPerMinute = this.requestCount / elapsed;
+
+    return {
+      totalRequests: this.requestCount,
+      elapsedMinutes: elapsed.toFixed(2),
+      requestsPerMinute: requestsPerMinute.toFixed(2)
+    };
+  }
+
+  reset() {
+    this.requestCount = 0;
+    this.startTime = Date.now();
+  }
+}
+
+const tracker = new UsageTracker();
+
+async function monitoredFetch(url) {
+  tracker.recordRequest();
+  const response = await fetch(url);
+
+  // Log usage every 100 requests
+  if (tracker.requestCount % 100 === 0) {
+    console.log('Usage stats:', tracker.getStats());
+  }
+
+  return response.json();
+}
+```
+
+## Error Handling
+
+### 1. Graceful Degradation
+
+Handle missing data gracefully:
+
+```javascript
+function getBestOdds(oddsData, market = '1X2') {
+  try {
+    const bookmakerOdds = Object.entries(oddsData.bookmakers)
+      .map(([bookmaker, markets]) => {
+        const targetMarket = markets.find(m => m.name === market);
+        if (!targetMarket?.odds?.[0]) return null;
+
+        return {
+          bookmaker,
+          ...targetMarket.odds[0]
+        };
+      })
+      .filter(Boolean);
+
+    if (bookmakerOdds.length === 0) {
+      return null; // No odds available
+    }
+
+    // Find best odds for each outcome
+    return {
+      home: bookmakerOdds.reduce((best, current) =>
+        parseFloat(current.home || 0) > parseFloat(best.home || 0) ? current : best
+      ),
+      away: bookmakerOdds.reduce((best, current) =>
+        parseFloat(current.away || 0) > parseFloat(best.away || 0) ? current : best
+      )
+    };
+  } catch (error) {
+    console.error('Error finding best odds:', error);
+    return null;
+  }
+}
+```
+
+### 2. Validate Responses
+
+Always validate API responses:
+
+```javascript
+function validateOddsResponse(data) {
+  if (!data || typeof data !== 'object') {
+    throw new Error('Invalid response format');
+  }
+
+  if (!data.id || !data.home || !data.away) {
+    throw new Error('Missing required fields');
+  }
+
+  if (!data.bookmakers || typeof data.bookmakers !== 'object') {
+    throw new Error('Invalid bookmakers data');
+  }
+
+  return true;
+}
+
+async function fetchOdds(eventId) {
+  try {
+    const response = await fetch(
+      `https://api.odds-api.io/v3/odds?apiKey=${apiKey}&eventId=${eventId}&bookmakers=Bet365`
+    );
+
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    validateOddsResponse(data);
+
+    return data;
+  } catch (error) {
+    console.error('Failed to fetch odds:', error);
+    throw error;
+  }
+}
+```
+
+### 3. Timeout Handling
+
+Set timeouts for API requests:
+
+```javascript
+async function fetchWithTimeout(url, timeout = 10000) {
+  const controller = new AbortController();
+  const id = setTimeout(() => controller.abort(), timeout);
+
+  try {
+    const response = await fetch(url, {
+      signal: controller.signal
+    });
+    clearTimeout(id);
+    return response;
+  } catch (error) {
+    clearTimeout(id);
+    if (error.name === 'AbortError') {
+      throw new Error('Request timeout');
+    }
+    throw error;
+  }
+}
+```
+
+## Security Best Practices
+
+### 1. Secure API Keys
+
+<Warning>
+  **Never expose API keys in client-side code!**
+</Warning>
+
+```javascript
+// ❌ Bad - API key exposed in browser
+const apiKey = 'sk_live_1234567890';
+fetch(`https://api.odds-api.io/v3/odds?apiKey=${apiKey}`);
+
+// ✅ Good - API key stays on server
+// Frontend
+fetch('/api/proxy/odds?eventId=123456');
+
+// Backend
+app.get('/api/proxy/odds', async (req, res) => {
+  const apiKey = process.env.ODDS_API_KEY;
+  const response = await fetch(
+    `https://api.odds-api.io/v3/odds?apiKey=${apiKey}&eventId=${req.query.eventId}`
+  );
+  const data = await response.json();
+  res.json(data);
+});
+```
+
+### 2. Validate Input
+
+Always validate user input before using it in API calls:
+
+```javascript
+function validateEventId(eventId) {
+  const id = parseInt(eventId);
+  if (isNaN(id) || id <= 0) {
+    throw new Error('Invalid event ID');
+  }
+  return id;
+}
+
+function validateBookmakers(bookmakers) {
+  const validBookmakers = bookmakers.split(',')
+    .map(b => b.trim())
+    .filter(b => b.length > 0);
+
+  if (validBookmakers.length === 0 || validBookmakers.length > 30) {
+    throw new Error('Invalid bookmakers list (1-30 required)');
+  }
+
+  return validBookmakers.join(',');
+}
+
+// Usage
+app.get('/api/odds', async (req, res) => {
+  try {
+    const eventId = validateEventId(req.query.eventId);
+    const bookmakers = validateBookmakers(req.query.bookmakers);
+
+    const data = await fetchOdds(eventId, bookmakers);
+    res.json(data);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
+```
+
+## Data Management
+
+### 1. Database Schema
+
+Store odds data efficiently:
+
+```sql
+-- Events table
+CREATE TABLE events (
+  id INTEGER PRIMARY KEY,
+  sport VARCHAR(50),
+  league VARCHAR(100),
+  home_team VARCHAR(100),
+  away_team VARCHAR(100),
+  event_date TIMESTAMP,
+  status VARCHAR(20),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Odds table (time-series data)
+CREATE TABLE odds (
+  id SERIAL PRIMARY KEY,
+  event_id INTEGER REFERENCES events(id),
+  bookmaker VARCHAR(50),
+  market VARCHAR(50),
+  home_odds DECIMAL(10, 2),
+  draw_odds DECIMAL(10, 2),
+  away_odds DECIMAL(10, 2),
+  timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  INDEX idx_event_time (event_id, timestamp)
+);
+
+-- Optimize for time-series queries
+CREATE INDEX idx_odds_timestamp ON odds(timestamp DESC);
+CREATE INDEX idx_odds_event_bookmaker ON odds(event_id, bookmaker, market);
+```
+
+### 2. Store Historical Data
+
+Keep historical odds for analysis:
+
+```javascript
+async function storeOdds(eventId, oddsData) {
+  const timestamp = new Date();
+
+  for (const [bookmaker, markets] of Object.entries(oddsData.bookmakers)) {
+    for (const market of markets) {
+      if (!market.odds[0]) continue;
+
+      await db.query(
+        `INSERT INTO odds (event_id, bookmaker, market, home_odds, draw_odds, away_odds, timestamp)
+         VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+        [
+          eventId,
+          bookmaker,
+          market.name,
+          market.odds[0].home,
+          market.odds[0].draw,
+          market.odds[0].away,
+          timestamp
+        ]
+      );
+    }
+  }
+}
+```
+
+### 3. Cleanup Old Data
+
+Regularly clean up stale data:
+
+```javascript
+// Delete odds older than 90 days
+async function cleanupOldOdds() {
+  await db.query(
+    `DELETE FROM odds WHERE timestamp < NOW() - INTERVAL '90 days'`
+  );
+}
+
+// Run daily cleanup
+setInterval(cleanupOldOdds, 24 * 60 * 60 * 1000);
+```
+
+## Monitoring & Logging
+
+### 1. Log Important Events
+
+```javascript
+class APILogger {
+  log(level, message, meta = {}) {
+    const entry = {
+      timestamp: new Date().toISOString(),
+      level,
+      message,
+      ...meta
+    };
+
+    console.log(JSON.stringify(entry));
+
+    // Send to logging service (e.g., Winston, Pino, CloudWatch)
+  }
+
+  info(message, meta) {
+    this.log('info', message, meta);
+  }
+
+  error(message, error, meta) {
+    this.log('error', message, {
+      ...meta,
+      error: error.message,
+      stack: error.stack
+    });
+  }
+
+  metric(name, value, unit = 'count') {
+    this.log('metric', name, { value, unit });
+  }
+}
+
+const logger = new APILogger();
+
+// Usage
+async function fetchOdds(eventId) {
+  const startTime = Date.now();
+
+  try {
+    logger.info('Fetching odds', { eventId });
+
+    const data = await fetch(`...`);
+
+    const duration = Date.now() - startTime;
+    logger.metric('odds_fetch_duration', duration, 'ms');
+
+    return data;
+  } catch (error) {
+    logger.error('Failed to fetch odds', error, { eventId });
+    throw error;
+  }
+}
+```
+
+### 2. Set Up Alerts
+
+Monitor critical metrics:
+
+```javascript
+class AlertSystem {
+  constructor(thresholds) {
+    this.thresholds = thresholds;
+    this.metrics = {};
+  }
+
+  recordMetric(name, value) {
+    if (!this.metrics[name]) {
+      this.metrics[name] = [];
+    }
+
+    this.metrics[name].push({
+      value,
+      timestamp: Date.now()
+    });
+
+    // Keep only last 100 values
+    if (this.metrics[name].length > 100) {
+      this.metrics[name].shift();
+    }
+
+    this.checkThreshold(name);
+  }
+
+  checkThreshold(name) {
+    const threshold = this.thresholds[name];
+    if (!threshold) return;
+
+    const recent = this.metrics[name].slice(-10);
+    const average = recent.reduce((sum, m) => sum + m.value, 0) / recent.length;
+
+    if (average > threshold) {
+      this.sendAlert(name, average, threshold);
+    }
+  }
+
+  sendAlert(metric, value, threshold) {
+    console.error(`ALERT: ${metric} is ${value}, threshold: ${threshold}`);
+    // Send to alerting service (PagerDuty, Slack, etc.)
+  }
+}
+
+const alerts = new AlertSystem({
+  error_rate: 0.05, // 5% error rate
+  response_time: 2000, // 2 second response time
+  rate_limit_hits: 5 // 5 rate limit hits in 10 requests
+});
+```
+
+## Testing
+
+### 1. Unit Tests
+
+```javascript
+const { describe, it, expect } = require('@jest/globals');
+
+describe('Odds API Client', () => {
+  it('should fetch odds for an event', async () => {
+    const eventId = 123456;
+    const odds = await fetchOdds(eventId);
+
+    expect(odds).toBeDefined();
+    expect(odds.id).toBe(eventId);
+    expect(odds.bookmakers).toBeDefined();
+  });
+
+  it('should handle invalid event ID', async () => {
+    await expect(fetchOdds('invalid')).rejects.toThrow();
+  });
+
+  it('should cache responses', async () => {
+    const eventId = 123456;
+
+    const start1 = Date.now();
+    await getCachedOdds(eventId);
+    const time1 = Date.now() - start1;
+
+    const start2 = Date.now();
+    await getCachedOdds(eventId);
+    const time2 = Date.now() - start2;
+
+    expect(time2).toBeLessThan(time1);
+  });
+});
+```
+
+### 2. Integration Tests
+
+```javascript
+describe('Odds API Integration', () => {
+  it('should fetch and compare odds', async () => {
+    // Fetch events
+    const events = await fetchEvents('football');
+    expect(events.length).toBeGreaterThan(0);
+
+    // Fetch odds for first event
+    const odds = await fetchOdds(events[0].id);
+    expect(odds.bookmakers).toBeDefined();
+
+    // Find best odds
+    const bestOdds = findBestOdds(odds);
+    expect(bestOdds.home).toBeDefined();
+    expect(bestOdds.away).toBeDefined();
+  });
+});
+```
+
+## Summary Checklist
+
+<AccordionGroup>
+  <Accordion title="Performance">
+    - ✅ Use batch endpoints when possible
+    - ✅ Implement appropriate caching
+    - ✅ Select relevant bookmakers only
+    - ✅ Minimize unnecessary API calls
+  </Accordion>
+
+  <Accordion title="Rate Limiting">
+    - ✅ Implement rate limiting logic
+    - ✅ Handle 429 responses with backoff
+    - ✅ Monitor and track usage
+    - ✅ Use multi-endpoints efficiently
+  </Accordion>
+
+  <Accordion title="Error Handling">
+    - ✅ Validate all responses
+    - ✅ Handle missing data gracefully
+    - ✅ Implement request timeouts
+    - ✅ Log errors properly
+  </Accordion>
+
+  <Accordion title="Security">
+    - ✅ Never expose API keys client-side
+    - ✅ Use environment variables
+    - ✅ Validate all user input
+    - ✅ Implement server-side proxy
+  </Accordion>
+
+  <Accordion title="Data Management">
+    - ✅ Design efficient database schema
+    - ✅ Store historical data when needed
+    - ✅ Clean up old data regularly
+    - ✅ Index time-series queries
+  </Accordion>
+</AccordionGroup>

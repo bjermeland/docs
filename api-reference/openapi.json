@@ -1,94 +1,73 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "OpenAPI Plant Store",
-    "description": "A sample API that uses a plant store as an example to demonstrate features in the OpenAPI specification",
-    "license": {
-      "name": "MIT"
-    },
-    "version": "1.0.0"
+    "title": "Odds-API.io - Real-Time Sports Betting Odds API (v3)",
+    "description": "Odds-API.io is a powerful sports betting odds comparison API, providing real-time data from 250+ bookmakers across 10+ sports with near zero latency.\n\n**Key Features:**\n- 250+ bookmakers supported\n- 10+ sports including Football, Basketball, Tennis, Esports and more\n- Real-time odds with close to zero latency\n- Pre-match & In-play odds coverage\n- 99.9% uptime for reliability",
+    "version": "3.0.0",
+    "contact": {}
   },
   "servers": [
     {
-      "url": "http://sandbox.mintlify.com"
+      "url": "https://api.odds-api.io/v3",
+      "description": "Production API"
+    },
+    {
+      "url": "http://api.odds-api.io/v3",
+      "description": "Production API (HTTP)"
     }
   ],
   "security": [
     {
-      "bearerAuth": []
+      "ApiKeyAuth": []
     }
   ],
   "paths": {
-    "/plants": {
+    "/sports": {
       "get": {
-        "description": "Returns all plants from the system that the user has access to",
-        "parameters": [
-          {
-            "name": "limit",
-            "in": "query",
-            "description": "The maximum number of results to return",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
+        "tags": ["Sports"],
+        "summary": "Get all supported sports",
+        "description": "Returns a list of supported sports with name and slug",
+        "operationId": "getSports",
         "responses": {
           "200": {
-            "description": "Plant response",
+            "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/Plant"
+                    "$ref": "#/components/schemas/SportResponse"
                   }
                 }
               }
             }
           },
           "400": {
-            "description": "Unexpected error",
+            "description": "Bad Request",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "description": "Creates a new plant in the store",
-        "requestBody": {
-          "description": "Plant to add to the store",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/NewPlant"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "plant response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Plant"
+                  "$ref": "#/components/schemas/ErrorResponse"
                 }
               }
             }
           },
-          "400": {
-            "description": "unexpected error",
+          "401": {
+            "description": "Unauthorized",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
                 }
               }
             }
@@ -96,121 +75,1325 @@
         }
       }
     },
-    "/plants/{id}": {
-      "delete": {
-        "description": "Deletes a single plant based on the ID supplied",
+    "/leagues": {
+      "get": {
+        "tags": ["Leagues"],
+        "summary": "Get all leagues for a given sport",
+        "description": "Returns a list of leagues (name, slug, event count) for a specified sport",
+        "operationId": "getLeagues",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
         "parameters": [
           {
-            "name": "id",
-            "in": "path",
-            "description": "ID of plant to delete",
+            "name": "apiKey",
+            "in": "query",
+            "description": "API key for authentication",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "type": "string"
+            }
+          },
+          {
+            "name": "sport",
+            "in": "query",
+            "description": "Sport slug (e.g. football, basketball)",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "football"
             }
           }
         ],
         "responses": {
-          "204": {
-            "description": "Plant deleted",
-            "content": {}
-          },
-          "400": {
-            "description": "unexpected error",
+          "200": {
+            "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/LeagueResponse"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
                 }
               }
             }
           }
         }
       }
-    }
-  },
-  "webhooks": {
-    "/plant/webhook": {
-      "post": {
-        "description": "Information about a new plant added to the store",
-        "requestBody": {
-          "description": "Plant added to the store",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/NewPlant"
+    },
+    "/events": {
+      "get": {
+        "tags": ["Events"],
+        "summary": "Get events for a specific sport",
+        "description": "Returns events with enhanced filtering and pagination",
+        "operationId": "getEvents",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "apiKey",
+            "in": "query",
+            "description": "API key for authentication",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sport",
+            "in": "query",
+            "description": "Sport slug (e.g. football)",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "football"
+            }
+          },
+          {
+            "name": "league",
+            "in": "query",
+            "description": "League slug (e.g. england-premier-league)",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "england-premier-league"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "description": "Comma-separated event statuses (e.g. pending,live,settled)",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "pending,live"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Results per page (max 100)",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "example": 50
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SimpleEventDto"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
               }
             }
           }
-        },
+        }
+      }
+    },
+    "/events/{id}": {
+      "get": {
+        "tags": ["Events"],
+        "summary": "Get a single event by ID",
+        "description": "Returns a single event by its unique identifier",
+        "operationId": "getEventById",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "apiKey",
+            "in": "query",
+            "description": "API key for authentication",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Event ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "example": 123456
+            }
+          }
+        ],
         "responses": {
           "200": {
-            "description": "Return a 200 status to indicate that the data was received successfully"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SimpleEventDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/events/search": {
+      "get": {
+        "tags": ["Events"],
+        "summary": "Search for events by team or league name",
+        "description": "Searches all upcoming events using a text query. Returns up to 10 results.",
+        "operationId": "searchEvents",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "apiKey",
+            "in": "query",
+            "description": "API key for authentication",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "Search term (min 3 characters)",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Liverpool"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SimpleEventDto"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/bookmakers": {
+      "get": {
+        "tags": ["Bookmakers"],
+        "summary": "Get all available bookmakers",
+        "description": "Fetch a list of supported bookmakers from Odds-API",
+        "operationId": "getBookmakers",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Bookmaker"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/bookmakers/selected": {
+      "get": {
+        "tags": ["Bookmakers"],
+        "summary": "Get user's selected bookmakers",
+        "description": "Fetch the list of bookmakers selected by the authenticated user",
+        "operationId": "getSelectedBookmakers",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "apiKey",
+            "in": "query",
+            "description": "API key for authentication",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/bookmakers/selected/clear": {
+      "put": {
+        "tags": ["Bookmakers"],
+        "summary": "Clear user's selected bookmakers",
+        "description": "Remove all selected bookmakers for the authenticated user (limited to once every 12 hours)",
+        "operationId": "clearSelectedBookmakers",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "apiKey",
+            "in": "query",
+            "description": "API key for authentication",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too Many Requests",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/odds": {
+      "get": {
+        "tags": ["Odds"],
+        "summary": "Get event odds for a specific event",
+        "description": "Returns odds comparison for a specific event from selected bookmakers.",
+        "operationId": "getOdds",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "apiKey",
+            "in": "query",
+            "description": "API key for authentication",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "eventId",
+            "in": "query",
+            "description": "Event ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "123456"
+            }
+          },
+          {
+            "name": "bookmakers",
+            "in": "query",
+            "description": "Comma-separated list of bookmaker names (max 30)",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bet365,Unibet"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EventResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/odds/multi": {
+      "get": {
+        "tags": ["Odds"],
+        "summary": "Get odds for multiple events",
+        "description": "Returns odds comparison for up to 10 events from selected bookmakers (counts as only 1 request).",
+        "operationId": "getMultiOdds",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "apiKey",
+            "in": "query",
+            "description": "API key for authentication",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "eventIds",
+            "in": "query",
+            "description": "Comma-separated list of up to 10 Event IDs",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "bookmakers",
+            "in": "query",
+            "description": "Comma-separated list of bookmaker names (max 30)",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EventResponse"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/odds/updated": {
+      "get": {
+        "tags": ["Odds"],
+        "summary": "Get updated event odds since a given timestamp",
+        "description": "Returns updated event odds for a specific bookmaker since a given UNIX timestamp (max 1 minute old)",
+        "operationId": "getUpdatedOdds",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "apiKey",
+            "in": "query",
+            "description": "API key for authentication",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "since",
+            "in": "query",
+            "description": "Unix timestamp (max 1 minute old)",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "bookmaker",
+            "in": "query",
+            "description": "Bookmaker name (e.g. Bet365)",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sport",
+            "in": "query",
+            "description": "Sport name (e.g. Football)",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EventResponse"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/value-bets": {
+      "get": {
+        "tags": ["Value Bets"],
+        "summary": "Get value bets by bookmaker",
+        "description": "Returns value bets for a specific bookmaker with optional match info. Updated every 5 seconds.",
+        "operationId": "getValueBets",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "apiKey",
+            "in": "query",
+            "description": "API key for authentication",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "bookmaker",
+            "in": "query",
+            "description": "Bookmaker name (e.g. Bet365)",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bet365"
+            }
+          },
+          {
+            "name": "includeEventDetails",
+            "in": "query",
+            "description": "Include event details",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "example": true
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EventValueBet"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
           }
         }
       }
     }
   },
   "components": {
+    "securitySchemes": {
+      "ApiKeyAuth": {
+        "type": "apiKey",
+        "in": "query",
+        "name": "apiKey",
+        "description": "API key authentication"
+      }
+    },
     "schemas": {
-      "Plant": {
-        "required": [
-          "name"
-        ],
-        "type": "object",
-        "properties": {
-          "name": {
-            "description": "The name of the plant",
-            "type": "string"
-          },
-          "tag": {
-            "description": "Tag to specify the type",
-            "type": "string"
-          }
-        }
-      },
-      "NewPlant": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/Plant"
-          },
-          {
-            "required": [
-              "id"
-            ],
-            "type": "object",
-            "properties": {
-              "id": {
-                "description": "Identification number of the plant",
-                "type": "integer",
-                "format": "int64"
-              }
-            }
-          }
-        ]
-      },
-      "Error": {
-        "required": [
-          "error",
-          "message"
-        ],
+      "ErrorResponse": {
         "type": "object",
         "properties": {
           "error": {
-            "type": "integer",
-            "format": "int32"
+            "type": "string",
+            "example": "Error message"
+          }
+        }
+      },
+      "SportResponse": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Football"
           },
-          "message": {
+          "slug": {
+            "type": "string",
+            "example": "football"
+          }
+        }
+      },
+      "LeagueResponse": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "England - Premier League"
+          },
+          "slug": {
+            "type": "string",
+            "example": "england-premier-league"
+          },
+          "eventsCount": {
+            "type": "integer",
+            "example": 32
+          }
+        }
+      },
+      "Bookmaker": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Bet365"
+          }
+        }
+      },
+      "Sport": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Football"
+          },
+          "slug": {
+            "type": "string",
+            "example": "football"
+          }
+        }
+      },
+      "League": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Premier League"
+          },
+          "slug": {
+            "type": "string",
+            "example": "premier-league"
+          }
+        }
+      },
+      "Score": {
+        "type": "object",
+        "properties": {
+          "home": {
+            "type": "integer"
+          },
+          "away": {
+            "type": "integer"
+          }
+        }
+      },
+      "SimpleEventDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "sport": {
+            "$ref": "#/components/schemas/Sport"
+          },
+          "league": {
+            "$ref": "#/components/schemas/League"
+          },
+          "home": {
+            "type": "string"
+          },
+          "away": {
+            "type": "string"
+          },
+          "date": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "scores": {
+            "$ref": "#/components/schemas/Score"
+          }
+        }
+      },
+      "Odds": {
+        "type": "object",
+        "properties": {
+          "home": {
+            "type": "string"
+          },
+          "homeLink": {
+            "type": "string"
+          },
+          "draw": {
+            "type": "string"
+          },
+          "drawLink": {
+            "type": "string"
+          },
+          "away": {
+            "type": "string"
+          },
+          "awayLink": {
+            "type": "string"
+          },
+          "hdp": {
+            "type": "number"
+          },
+          "label": {
+            "type": "string"
+          },
+          "max": {
+            "type": "integer"
+          },
+          "over": {
+            "type": "string"
+          },
+          "under": {
+            "type": "string"
+          },
+          "yes": {
+            "type": "string"
+          },
+          "no": {
+            "type": "string"
+          },
+          "layHome": {
+            "type": "string"
+          },
+          "layDraw": {
+            "type": "string"
+          },
+          "layAway": {
+            "type": "string"
+          },
+          "layOver": {
+            "type": "string"
+          },
+          "layUnder": {
+            "type": "string"
+          },
+          "layYes": {
+            "type": "string"
+          },
+          "layNo": {
+            "type": "string"
+          },
+          "depthHome": {
+            "type": "string"
+          },
+          "depthDraw": {
+            "type": "string"
+          },
+          "depthAway": {
+            "type": "string"
+          },
+          "depthOver": {
+            "type": "string"
+          },
+          "depthUnder": {
+            "type": "string"
+          },
+          "depthLayHome": {
+            "type": "string"
+          },
+          "depthLayDraw": {
+            "type": "string"
+          },
+          "depthLayAway": {
+            "type": "string"
+          },
+          "depthLayOver": {
+            "type": "string"
+          },
+          "depthLayUnder": {
             "type": "string"
           }
         }
-      }
-    },
-    "securitySchemes": {
-      "bearerAuth": {
-        "type": "http",
-        "scheme": "bearer"
+      },
+      "MultiMarketDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "odds": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Odds"
+            }
+          },
+          "updatedAt": {
+            "type": "string"
+          }
+        }
+      },
+      "EventResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "sport": {
+            "$ref": "#/components/schemas/Sport"
+          },
+          "league": {
+            "$ref": "#/components/schemas/League"
+          },
+          "home": {
+            "type": "string"
+          },
+          "away": {
+            "type": "string"
+          },
+          "date": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "bookmakers": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/MultiMarketDto"
+              }
+            }
+          },
+          "urls": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "BookmakerOdds": {
+        "type": "object",
+        "properties": {
+          "home": {
+            "type": "string"
+          },
+          "homeDirectLink": {
+            "type": "string"
+          },
+          "draw": {
+            "type": "string"
+          },
+          "drawDirectLink": {
+            "type": "string"
+          },
+          "away": {
+            "type": "string"
+          },
+          "awayDirectLink": {
+            "type": "string"
+          },
+          "hdp": {
+            "type": "string"
+          },
+          "href": {
+            "type": "string"
+          }
+        }
+      },
+      "EventInfo": {
+        "type": "object",
+        "properties": {
+          "home": {
+            "type": "string"
+          },
+          "away": {
+            "type": "string"
+          },
+          "date": {
+            "type": "string"
+          },
+          "sport": {
+            "type": "string"
+          },
+          "league": {
+            "type": "string"
+          }
+        }
+      },
+      "MarketResult": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "home": {
+            "type": "string"
+          },
+          "draw": {
+            "type": "string"
+          },
+          "away": {
+            "type": "string"
+          },
+          "hdp": {
+            "type": "number"
+          },
+          "max": {
+            "type": "number"
+          }
+        }
+      },
+      "EventValueBet": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "eventId": {
+            "type": "integer"
+          },
+          "bookmaker": {
+            "type": "string"
+          },
+          "market": {
+            "$ref": "#/components/schemas/MarketResult"
+          },
+          "betSide": {
+            "type": "string"
+          },
+          "expectedValue": {
+            "type": "number"
+          },
+          "expectedValueUpdatedAt": {
+            "type": "string"
+          },
+          "bookmakerOdds": {
+            "$ref": "#/components/schemas/BookmakerOdds"
+          },
+          "event": {
+            "$ref": "#/components/schemas/EventInfo"
+          }
+        }
       }
     }
   }

@@ -1,0 +1,351 @@
+---
+title: "Finding Value Bets"
+description: "Discover profitable betting opportunities with the Value Bets API"
+---
+
+# Find Profitable Bets Instantly with the Value Bets API
+
+If you're serious about sports betting, you know how powerful real-time data can be. Whether you're a developer, sports trader, or running a betting platform, fast and reliable odds comparison can give you a major advantage.
+
+With our **Value Bets API**, you get access to real-time odds from over 250 bookmakers, including industry leaders like **Bet365** and **Pinnacle**. This guide will walk you through how to use our API to uncover profitable bets.
+
+## What Is a Value Bet?
+
+A **value bet** is when a sportsbook offers odds that are too high based on the actual probability of the outcome. These bets have **positive expected value (EV)**, which means they offer long-term profitability when used correctly.
+
+Spotting these bets manually is difficult and time-consuming. Our Value Bets API does the work for you by analyzing live odds and identifying high-EV bets instantly.
+
+## How the Value Bets API Works
+
+Our system scans live odds across more than **250 trusted bookmakers** worldwide. It calculates the expected value for each bet and filters out anything that doesn't offer a clear statistical edge.
+
+You'll only receive bets that have strong upside potential based on the latest odds data.
+
+## Real-Time API Example
+
+With a simple API call, you can retrieve profitable value bets from any bookmaker. For example, to get value bets from Bet365:
+
+```bash
+https://api.odds-api.io/v3/value-bets?apiKey=YOUR_API_KEY&bookmaker=Bet365&includeEventDetails=true
+```
+
+This will return live value bets from Bet365, complete with event info, odds, market type, and EV percentage.
+
+<CodeGroup>
+
+```bash cURL
+curl "https://api.odds-api.io/v3/value-bets?apiKey=YOUR_API_KEY&bookmaker=Bet365&includeEventDetails=true"
+```
+
+```javascript JavaScript
+const apiKey = process.env.ODDS_API_KEY;
+
+const response = await fetch(
+  `https://api.odds-api.io/v3/value-bets?apiKey=${apiKey}&bookmaker=Bet365&includeEventDetails=true`
+);
+
+const valueBets = await response.json();
+console.log(valueBets);
+```
+
+```python Python
+import requests
+import os
+
+api_key = os.environ['ODDS_API_KEY']
+
+response = requests.get(
+    'https://api.odds-api.io/v3/value-bets',
+    params={
+        'apiKey': api_key,
+        'bookmaker': 'Bet365',
+        'includeEventDetails': True
+    }
+)
+
+value_bets = response.json()
+print(value_bets)
+```
+
+```php PHP
+<?php
+$apiKey = getenv('ODDS_API_KEY');
+
+$url = 'https://api.odds-api.io/v3/value-bets?' . http_build_query([
+    'apiKey' => $apiKey,
+    'bookmaker' => 'Bet365',
+    'includeEventDetails' => true
+]);
+
+$response = file_get_contents($url);
+$valueBets = json_decode($response, true);
+print_r($valueBets);
+```
+
+</CodeGroup>
+
+## Example Response
+
+Let's say the API returns a bet on the away team, **Manisa Futbol Kulubu**, with an expected value of **110.73%**. That means this bet is priced better than it should be, giving you a statistical edge.
+
+```json
+{
+  "id": "63628875-Spread-away-Bet365--1",
+  "expectedValue": 110.73,
+  "expectedValueUpdatedAt": "2025-09-16T11:33:06.615Z",
+  "betSide": "away",
+  "market": {
+    "name": "Spread",
+    "hdp": -1,
+    "home": "2.491",
+    "away": "1.671",
+    "max": 150
+  },
+  "bookmaker": "Bet365",
+  "bookmakerOdds": {
+    "home": "1.950",
+    "away": "1.850",
+    "hdp": "-1",
+    "href": "https://www.bet365.com/#/AC/B1/C1/D8/E181348466/F3/"
+  },
+  "eventId": 63628875,
+  "event": {
+    "home": "Kirikkale FK",
+    "away": "Manisa Futbol Kulubu",
+    "date": "2025-09-16T12:30:00Z",
+    "sport": "Football",
+    "league": "Turkiye - Turkiye Kupasi"
+  }
+}
+```
+
+## Understanding the Response
+
+| Field | Description | Example |
+|-------|-------------|---------|
+| `expectedValue` | The calculated EV as a percentage | 110.73% means the bet offers 110.73% value |
+| `betSide` | Which outcome has value | "away", "home", "over", "under" |
+| `market.name` | The betting market | "Spread", "1X2", "Over/Under" |
+| `bookmakerOdds` | Current odds at the bookmaker | Bet365 offers 1.850 for away |
+| `event` | Match details | Teams, date, sport, league |
+
+<Note>
+  An expected value of **110.73%** means if you repeatedly place similar bets, you can expect a return of 110.73% over the long run—a significant edge!
+</Note>
+
+## Filtering High-Value Bets
+
+Here's how to filter and sort value bets to find the most profitable opportunities:
+
+```javascript
+// Filter bets with at least 5% expected value
+const highValueBets = valueBets
+  .filter(bet => bet.expectedValue >= 5)
+  .sort((a, b) => b.expectedValue - a.expectedValue);
+
+// Display the top 5 value bets
+highValueBets.slice(0, 5).forEach((bet, index) => {
+  console.log(`\n#${index + 1} Value Bet:`);
+  console.log(`Match: ${bet.event.home} vs ${bet.event.away}`);
+  console.log(`League: ${bet.event.league}`);
+  console.log(`Market: ${bet.market.name}`);
+  console.log(`Bet on: ${bet.betSide}`);
+  console.log(`Odds: ${bet.bookmakerOdds[bet.betSide]}`);
+  console.log(`Expected Value: ${bet.expectedValue.toFixed(2)}%`);
+  console.log(`Bookmaker: ${bet.bookmaker}`);
+  console.log(`Place bet: ${bet.bookmakerOdds.href}`);
+});
+```
+
+**Output:**
+```
+#1 Value Bet:
+Match: Kirikkale FK vs Manisa Futbol Kulubu
+League: Turkiye - Turkiye Kupasi
+Market: Spread
+Bet on: away
+Odds: 1.850
+Expected Value: 110.73%
+Bookmaker: Bet365
+Place bet: https://www.bet365.com/#/AC/B1/C1/D8/E181348466/F3/
+```
+
+## Monitoring Multiple Bookmakers
+
+To maximize opportunities, monitor value bets across multiple bookmakers:
+
+```javascript
+const bookmakers = ['Bet365', 'Pinnacle', 'Unibet', 'William Hill', 'DraftKings'];
+
+async function getAllValueBets() {
+  const apiKey = process.env.ODDS_API_KEY;
+
+  const promises = bookmakers.map(bookmaker =>
+    fetch(
+      `https://api.odds-api.io/v3/value-bets?apiKey=${apiKey}&bookmaker=${bookmaker}&includeEventDetails=true`
+    ).then(res => res.json())
+  );
+
+  const results = await Promise.all(promises);
+
+  // Combine all value bets
+  const allBets = results.flat();
+
+  // Filter for minimum 5% EV and sort by EV
+  const topBets = allBets
+    .filter(bet => bet.expectedValue >= 5)
+    .sort((a, b) => b.expectedValue - a.expectedValue);
+
+  return topBets;
+}
+
+const valueBets = await getAllValueBets();
+console.log(`Found ${valueBets.length} value bets across all bookmakers`);
+```
+
+## Real-World Use Case: Automated Alerts
+
+Build an automated system that alerts you when high-value bets appear:
+
+```javascript
+class ValueBetMonitor {
+  constructor(apiKey, minEV = 5) {
+    this.apiKey = apiKey;
+    this.minEV = minEV;
+    this.bookmakers = ['Bet365', 'Pinnacle', 'Unibet'];
+    this.notifiedBets = new Set();
+  }
+
+  async checkForValueBets() {
+    for (const bookmaker of this.bookmakers) {
+      try {
+        const response = await fetch(
+          `https://api.odds-api.io/v3/value-bets?apiKey=${this.apiKey}&bookmaker=${bookmaker}&includeEventDetails=true`
+        );
+
+        const bets = await response.json();
+
+        bets
+          .filter(bet => bet.expectedValue >= this.minEV)
+          .filter(bet => !this.notifiedBets.has(bet.id))
+          .forEach(bet => {
+            this.sendAlert(bet);
+            this.notifiedBets.add(bet.id);
+          });
+      } catch (error) {
+        console.error(`Error checking ${bookmaker}:`, error);
+      }
+    }
+  }
+
+  sendAlert(bet) {
+    const message = `
+🎯 Value Bet Alert!
+
+${bet.event.home} vs ${bet.event.away}
+${bet.event.league} | ${bet.event.sport}
+
+Market: ${bet.market.name}
+Bet on: ${bet.betSide.toUpperCase()}
+Odds: ${bet.bookmakerOdds[bet.betSide]}
+Expected Value: ${bet.expectedValue.toFixed(2)}%
+
+Bookmaker: ${bet.bookmaker}
+Place bet: ${bet.bookmakerOdds.href}
+    `.trim();
+
+    console.log(message);
+    // Send via email, SMS, Telegram, etc.
+  }
+
+  start(intervalSeconds = 30) {
+    console.log('Starting value bet monitor...');
+    this.checkForValueBets(); // Initial check
+    setInterval(() => this.checkForValueBets(), intervalSeconds * 1000);
+  }
+}
+
+// Usage
+const monitor = new ValueBetMonitor(process.env.ODDS_API_KEY, 5);
+monitor.start(30); // Check every 30 seconds
+```
+
+## Why Use Odds-API.io for Value Betting?
+
+Here's what sets us apart:
+
+<CardGroup cols={2}>
+  <Card title="Real-Time Data" icon="bolt">
+    Odds updated with sub-150ms latency
+  </Card>
+  <Card title="250+ Bookmakers" icon="building">
+    Including Bet365, Pinnacle, William Hill, DraftKings, and more
+  </Card>
+  <Card title="20+ Sports" icon="futbol">
+    Football, basketball, tennis, esports, and more
+  </Card>
+  <Card title="500+ Market Types" icon="chart-mixed">
+    1X2, spreads, totals, props, and specialized markets
+  </Card>
+  <Card title="99.9% Uptime" icon="check-circle">
+    Backed by SLA for reliability
+  </Card>
+  <Card title="Developer-First" icon="code">
+    Clean JSON responses with full documentation
+  </Card>
+</CardGroup>
+
+## Try It Free for 10 Days
+
+All plans come with a **10-day free trial**—no credit card needed. Test the full power of our sports data and value betting endpoints before committing.
+
+Need higher limits or additional features? Reach out for custom enterprise solutions with dedicated infrastructure and 24/7 support.
+
+<Card
+  title="Start Your Free Trial"
+  icon="rocket"
+  href="https://odds-api.io"
+>
+  Get started with Odds-API.io today
+</Card>
+
+## Frequently Asked Questions
+
+<AccordionGroup>
+  <Accordion title="What sports are included?">
+    We cover football, basketball, tennis, baseball, esports, and more—over 20 sports in total.
+  </Accordion>
+
+  <Accordion title="Can I filter value bets?">
+    Yes, you can filter by bookmaker, sport, and market type. You can also set your own minimum expected value threshold.
+  </Accordion>
+
+  <Accordion title="How fast is the data?">
+    Odds are updated in real time, with average latency under 150 milliseconds. Value bets are recalculated every 5 seconds.
+  </Accordion>
+
+  <Accordion title="How is expected value calculated?">
+    We analyze odds from all available bookmakers to calculate the true market probability, then compare each bookmaker's odds to identify value opportunities.
+  </Accordion>
+
+  <Accordion title="What bookmakers are supported?">
+    Over 250 bookmakers worldwide, including Bet365, Pinnacle, Unibet, William Hill, DraftKings, FanDuel, and many more.
+  </Accordion>
+</AccordionGroup>
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="API Reference" icon="code" href="/api-reference/value-bets/get-value-bets">
+    Explore the full Value Bets API documentation
+  </Card>
+  <Card title="Value Bets Guide" icon="book" href="/guides/value-bets">
+    Learn advanced value betting strategies
+  </Card>
+  <Card title="Best Practices" icon="lightbulb" href="/guides/best-practices">
+    Optimize your API usage and implementation
+  </Card>
+  <Card title="Quickstart" icon="rocket" href="/quickstart">
+    Get started with your first API call
+  </Card>
+</CardGroup>
