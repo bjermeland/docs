@@ -1304,7 +1304,7 @@
                 "tags": [
                     "Odds"
                 ],
-                "summary": "Get updated event odds since a given timestamp",
+                "summary": "Get Updated Odds",
                 "parameters": [
                     {
                         "description": "API key for authentication",
