@@ -34,7 +34,7 @@ const bookmaker = 'Bet365';
 const includeEventDetails = true;
 
 const response = await fetch(
-  `https://api.odds-api.io/v3/value-bets?apiKey=${apiKey}&bookmaker=${bookmaker}&includeEventDetails=${includeEventDetails}`
+  `https://api2.odds-api.io/v3/value-bets?apiKey=${apiKey}&bookmaker=${bookmaker}&includeEventDetails=${includeEventDetails}`
 );
 
 const valueBets = await response.json();
@@ -50,7 +50,7 @@ bookmaker = 'Bet365'
 include_event_details = True
 
 response = requests.get(
-    'https://api.odds-api.io/v3/value-bets',
+    'https://api2.odds-api.io/v3/value-bets',
     params={
         'apiKey': api_key,
         'bookmaker': bookmaker,
@@ -68,7 +68,7 @@ $apiKey = getenv('ODDS_API_KEY');
 $bookmaker = 'Bet365';
 $includeEventDetails = true;
 
-$url = 'https://api.odds-api.io/v3/value-bets?' . http_build_query([
+$url = 'https://api2.odds-api.io/v3/value-bets?' . http_build_query([
     'apiKey' => $apiKey,
     'bookmaker' => $bookmaker,
     'includeEventDetails' => $includeEventDetails
@@ -162,7 +162,7 @@ async function monitorValueBets(bookmaker, minEV = 0.03) {
   async function fetchAndProcess() {
     try {
       const response = await fetch(
-        `https://api.odds-api.io/v3/value-bets?apiKey=${apiKey}&bookmaker=${bookmaker}&includeEventDetails=true`
+        `https://api2.odds-api.io/v3/value-bets?apiKey=${apiKey}&bookmaker=${bookmaker}&includeEventDetails=true`
       );
       const valueBets = await response.json();
 
@@ -200,7 +200,7 @@ async function getAllValueBets(minEV = 0.03) {
 
   const promises = bookmakers.map(bookmaker =>
     fetch(
-      `https://api.odds-api.io/v3/value-bets?apiKey=${apiKey}&bookmaker=${bookmaker}&includeEventDetails=true`
+      `https://api2.odds-api.io/v3/value-bets?apiKey=${apiKey}&bookmaker=${bookmaker}&includeEventDetails=true`
     ).then(res => res.json())
   );
 
@@ -230,7 +230,7 @@ class ValueBetAlerter {
 
   async checkForNewValueBets(bookmaker) {
     const response = await fetch(
-      `https://api.odds-api.io/v3/value-bets?apiKey=${this.apiKey}&bookmaker=${bookmaker}&includeEventDetails=true`
+      `https://api2.odds-api.io/v3/value-bets?apiKey=${this.apiKey}&bookmaker=${bookmaker}&includeEventDetails=true`
     );
     const valueBets = await response.json();
 

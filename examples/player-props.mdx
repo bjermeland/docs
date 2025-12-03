@@ -42,7 +42,7 @@ Player props are available through the same `/v3/odds` endpoint:
 <CodeGroup>
 
 ```bash cURL
-curl "https://api.odds-api.io/v3/odds?apiKey=YOUR_API_KEY&eventId=123456&bookmakers=DraftKings,FanDuel"
+curl "https://api2.odds-api.io/v3/odds?apiKey=YOUR_API_KEY&eventId=123456&bookmakers=DraftKings,FanDuel"
 ```
 
 ```javascript JavaScript
@@ -51,7 +51,7 @@ const eventId = 123456;
 const bookmakers = 'DraftKings,FanDuel';
 
 const response = await fetch(
-  `https://api.odds-api.io/v3/odds?apiKey=${apiKey}&eventId=${eventId}&bookmakers=${bookmakers}`
+  `https://api2.odds-api.io/v3/odds?apiKey=${apiKey}&eventId=${eventId}&bookmakers=${bookmakers}`
 );
 
 const data = await response.json();
@@ -78,7 +78,7 @@ event_id = 123456
 bookmakers = 'DraftKings,FanDuel'
 
 response = requests.get(
-    'https://api.odds-api.io/v3/odds',
+    'https://api2.odds-api.io/v3/odds',
     params={
         'apiKey': api_key,
         'eventId': event_id,
@@ -250,7 +250,7 @@ async function getNFLPlayerProps(eventId) {
   const bookmakers = 'DraftKings,FanDuel,BetMGM,Caesars';
 
   const response = await fetch(
-    `https://api.odds-api.io/v3/odds?apiKey=${apiKey}&eventId=${eventId}&bookmakers=${bookmakers}`
+    `https://api2.odds-api.io/v3/odds?apiKey=${apiKey}&eventId=${eventId}&bookmakers=${bookmakers}`
   );
 
   const data = await response.json();
@@ -302,7 +302,7 @@ class PropsMonitor {
 
   async checkForLineMovement() {
     const response = await fetch(
-      `https://api.odds-api.io/v3/odds?apiKey=${this.apiKey}&eventId=${this.eventId}&bookmakers=${this.bookmakers}`
+      `https://api2.odds-api.io/v3/odds?apiKey=${this.apiKey}&eventId=${this.eventId}&bookmakers=${this.bookmakers}`
     );
 
     const data = await response.json();
@@ -373,7 +373,7 @@ async function combineFantasyAndProps(eventId, fantasyProjections) {
   const apiKey = process.env.ODDS_API_KEY;
 
   const response = await fetch(
-    `https://api.odds-api.io/v3/odds?apiKey=${apiKey}&eventId=${eventId}&bookmakers=DraftKings`
+    `https://api2.odds-api.io/v3/odds?apiKey=${apiKey}&eventId=${eventId}&bookmakers=DraftKings`
   );
 
   const data = await response.json();

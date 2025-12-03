@@ -22,20 +22,20 @@ Odds-API.io uses API key authentication to secure access to the API. Your API ke
 Include your API key as a query parameter in all authenticated requests:
 
 ```
-https://api.odds-api.io/v3/events?apiKey=YOUR_API_KEY&sport=football
+https://api2.odds-api.io/v3/events?apiKey=YOUR_API_KEY&sport=football
 ```
 
 <CodeGroup>
 
 ```bash cURL
-curl "https://api.odds-api.io/v3/events?apiKey=YOUR_API_KEY&sport=football"
+curl "https://api2.odds-api.io/v3/events?apiKey=YOUR_API_KEY&sport=football"
 ```
 
 ```javascript JavaScript
 const apiKey = process.env.ODDS_API_KEY;
 
 const response = await fetch(
-  `https://api.odds-api.io/v3/events?apiKey=${apiKey}&sport=football`
+  `https://api2.odds-api.io/v3/events?apiKey=${apiKey}&sport=football`
 );
 const data = await response.json();
 ```
@@ -47,7 +47,7 @@ import requests
 api_key = os.environ.get('ODDS_API_KEY')
 
 response = requests.get(
-    'https://api.odds-api.io/v3/events',
+    'https://api2.odds-api.io/v3/events',
     params={
         'apiKey': api_key,
         'sport': 'football'
@@ -60,7 +60,7 @@ data = response.json()
 <?php
 $apiKey = getenv('ODDS_API_KEY');
 
-$url = 'https://api.odds-api.io/v3/events?' . http_build_query([
+$url = 'https://api2.odds-api.io/v3/events?' . http_build_query([
     'apiKey' => $apiKey,
     'sport' => 'football'
 ]);
@@ -103,7 +103,7 @@ ODDS_API_KEY=your_api_key_here
 ```javascript
 // ❌ DON'T DO THIS - API key exposed in browser
 const apiKey = 'a7f3k9m2p5q8r1t4w6x9z2b5c8';
-fetch(`https://api.odds-api.io/v3/events?apiKey=${apiKey}`);
+fetch(`https://api2.odds-api.io/v3/events?apiKey=${apiKey}`);
 ```
 
 **Good Practice:**
@@ -116,7 +116,7 @@ const response = await fetch('/api/odds/events');
 app.get('/api/odds/events', async (req, res) => {
   const apiKey = process.env.ODDS_API_KEY;
   const response = await fetch(
-    `https://api.odds-api.io/v3/events?apiKey=${apiKey}&sport=football`
+    `https://api2.odds-api.io/v3/events?apiKey=${apiKey}&sport=football`
   );
   const data = await response.json();
   res.json(data);
