@@ -26,101 +26,76 @@
                     }
                 ],
                 "description": "Returns active arbitrage opportunities filtered by bookmakers. Only returns opportunities where ALL legs use the specified bookmakers.",
+                "produces": [
+                    "application/json"
+                ],
                 "tags": [
                     "Arbitrage Bets"
                 ],
                 "summary": "Get arbitrage betting opportunities",
                 "parameters": [
                     {
+                        "type": "string",
                         "description": "API key for authentication",
                         "name": "apiKey",
                         "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
+                        "required": true
                     },
                     {
+                        "type": "string",
                         "example": "\"Bet365,Pinnacle\"",
                         "description": "Comma-separated list of bookmakers (e.g. Bet365,Pinnacle)",
                         "name": "bookmakers",
                         "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
+                        "required": true
                     },
                     {
+                        "type": "integer",
                         "example": 50,
                         "description": "Maximum number of results (default 50, max 500)",
                         "name": "limit",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer"
-                        }
+                        "in": "query"
                     },
                     {
+                        "type": "boolean",
                         "example": true,
                         "description": "Include event details",
                         "name": "includeEventDetails",
-                        "in": "query",
-                        "schema": {
-                            "type": "boolean"
-                        }
+                        "in": "query"
                     }
                 ],
                 "responses": {
                     "200": {
                         "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/components/schemas/dto.ArbitrageOpportunity"
-                                    }
-                                }
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/dto.ArbitrageOpportunity"
                             }
                         }
                     },
                     "400": {
                         "description": "Bad Request",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/controllers.ErrorResponse"
-                                }
-                            }
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorResponse"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/controllers.ErrorResponse"
-                                }
-                            }
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorResponse"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/controllers.ErrorResponse"
-                                }
-                            }
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/controllers.ErrorResponse"
-                                }
-                            }
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorResponse"
                         }
                     }
                 }
@@ -129,72 +104,51 @@
         "/bookmakers": {
             "get": {
                 "description": "Fetch a list of supported bookmakers",
+                "produces": [
+                    "application/json"
+                ],
                 "tags": [
                     "Bookmakers"
                 ],
-                "summary": "Get all available bookmakers",
+                "summary": "Get Bookmakers",
                 "responses": {
                     "200": {
                         "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/components/schemas/models.Bookmaker"
-                                    }
-                                }
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Bookmaker"
                             }
                         }
                     },
                     "400": {
                         "description": "Bad Request",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/controllers.ErrorResponse"
-                                }
-                            }
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorResponse"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/controllers.ErrorResponse"
-                                }
-                            }
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorResponse"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/controllers.ErrorResponse"
-                                }
-                            }
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorResponse"
                         }
                     },
                     "404": {
                         "description": "Not Found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/controllers.ErrorResponse"
-                                }
-                            }
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/controllers.ErrorResponse"
-                                }
-                            }
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorResponse"
                         }
                     }
                 }
@@ -208,71 +162,52 @@
                     }
                 ],
                 "description": "Fetch the list of bookmakers selected by the authenticated user",
+                "produces": [
+                    "application/json"
+                ],
                 "tags": [
                     "Bookmakers"
                 ],
-                "summary": "Get user's selected bookmakers",
+                "summary": "Get Selected Bookmakers",
                 "parameters": [
                     {
+                        "type": "string",
                         "description": "API key for authentication",
                         "name": "apiKey",
                         "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
+                        "required": true
                     }
                 ],
                 "responses": {
                     "200": {
                         "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "additionalProperties": true
-                                }
-                            }
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
                         }
                     },
                     "400": {
                         "description": "Bad Request",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/controllers.ErrorResponse"
-                                }
-                            }
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorResponse"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/controllers.ErrorResponse"
-                                }
-                            }
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorResponse"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/controllers.ErrorResponse"
-                                }
-                            }
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/controllers.ErrorResponse"
-                                }
-                            }
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorResponse"
                         }
                     }
                 }
@@ -286,81 +221,58 @@
                     }
                 ],
                 "description": "Remove all selected bookmakers for the authenticated user (limited to once every 12 hours)",
+                "produces": [
+                    "application/json"
+                ],
                 "tags": [
                     "Bookmakers"
                 ],
-                "summary": "Clear user's selected bookmakers",
+                "summary": "Clear Selected Bookmakers",
                 "parameters": [
                     {
+                        "type": "string",
                         "description": "API key for authentication",
                         "name": "apiKey",
                         "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
+                        "required": true
                     }
                 ],
                 "responses": {
                     "200": {
                         "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "additionalProperties": true
-                                }
-                            }
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
                         }
                     },
                     "400": {
                         "description": "Bad Request",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/controllers.ErrorResponse"
-                                }
-                            }
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorResponse"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/controllers.ErrorResponse"
-                                }
-                            }
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorResponse"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/controllers.ErrorResponse"
-                                }
-                            }
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorResponse"
                         }
                     },
                     "429": {
                         "description": "Too Many Requests",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/controllers.ErrorResponse"
-                                }
-                            }
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/controllers.ErrorResponse"
-                                }
-                            }
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorResponse"
                         }
                     }
                 }
@@ -374,81 +286,60 @@
                     }
                 ],
                 "description": "Add bookmakers to the authenticated user",
+                "produces": [
+                    "application/json"
+                ],
                 "tags": [
                     "Bookmakers"
                 ],
                 "summary": "Select Bookmakers",
                 "parameters": [
                     {
+                        "type": "string",
                         "description": "API key for authentication",
                         "name": "apiKey",
                         "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
+                        "required": true
                     },
                     {
+                        "type": "string",
                         "example": "\"Bet365,Pinnacle\"",
                         "description": "Comma-separated list of bookmaker names (e.g. Bet365,Pinnacle)",
                         "name": "bookmakers",
                         "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
+                        "required": true
                     }
                 ],
                 "responses": {
                     "200": {
                         "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "additionalProperties": true
-                                }
-                            }
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
                         }
                     },
                     "400": {
                         "description": "Bad Request",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/controllers.ErrorResponse"
-                                }
-                            }
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorResponse"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/controllers.ErrorResponse"
-                                }
-                            }
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorResponse"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/controllers.ErrorResponse"
-                                }
-                            }
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/controllers.ErrorResponse"
-                                }
-                            }
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorResponse"
                         }
                     }
                 }
@@ -462,138 +353,103 @@
                     }
                 ],
                 "description": "Returns events with enhanced filtering and pagination",
+                "produces": [
+                    "application/json"
+                ],
                 "tags": [
                     "Events"
                 ],
                 "summary": "Get Events",
                 "parameters": [
                     {
+                        "type": "string",
                         "description": "API key for authentication",
                         "name": "apiKey",
                         "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
+                        "required": true
                     },
                     {
+                        "type": "string",
                         "example": "\"football\"",
                         "description": "Sport slug (e.g. football)",
                         "name": "sport",
                         "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
+                        "required": true
                     },
                     {
+                        "type": "string",
                         "example": "\"england-premier-league\"",
                         "description": "League slug (e.g. england-premier-league)",
                         "name": "league",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
+                        "in": "query"
                     },
                     {
+                        "type": "integer",
+                        "example": 38,
+                        "description": "Filter by participant ID (home or away)",
+                        "name": "participantId",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "example": "\"pending,live\"",
                         "description": "Comma-separated event statuses (e.g. pending,live,settled)",
                         "name": "status",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
+                        "in": "query"
                     },
                     {
+                        "type": "string",
                         "example": "\"2025-10-28T10:00:00Z\"",
                         "description": "Start date/time in RFC3339 format (e.g. 2025-10-28T10:00:00Z)",
                         "name": "from",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
+                        "in": "query"
                     },
                     {
+                        "type": "string",
                         "example": "\"2025-10-28T23:59:59Z\"",
                         "description": "End date/time in RFC3339 format (e.g. 2025-10-28T23:59:59Z)",
                         "name": "to",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "example": 50,
-                        "description": "Results per page (default 1000, max 1000)",
-                        "name": "limit",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer"
-                        }
+                        "in": "query"
                     }
                 ],
                 "responses": {
                     "200": {
                         "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/components/schemas/dto.SimpleEventDto"
-                                    }
-                                }
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/dto.SimpleEventDto"
                             }
                         }
                     },
                     "400": {
                         "description": "Bad Request",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/controllers.ErrorResponse"
-                                }
-                            }
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorResponse"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/controllers.ErrorResponse"
-                                }
-                            }
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorResponse"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/controllers.ErrorResponse"
-                                }
-                            }
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorResponse"
                         }
                     },
                     "404": {
                         "description": "Not Found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/controllers.ErrorResponse"
-                                }
-                            }
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/controllers.ErrorResponse"
-                                }
-                            }
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorResponse"
                         }
                     }
                 }
@@ -607,82 +463,61 @@
                     }
                 ],
                 "description": "Returns all currently live events from all sports with optional sport filter",
+                "produces": [
+                    "application/json"
+                ],
                 "tags": [
                     "Events"
                 ],
                 "summary": "Get Live Events",
                 "parameters": [
                     {
+                        "type": "string",
                         "description": "API key for authentication",
                         "name": "apiKey",
                         "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
+                        "required": true
                     },
                     {
+                        "type": "string",
                         "example": "\"football\"",
                         "description": "Sport slug to filter by (e.g. football)",
                         "name": "sport",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
+                        "in": "query"
                     }
                 ],
                 "responses": {
                     "200": {
                         "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/components/schemas/dto.SimpleEventDto"
-                                    }
-                                }
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/dto.SimpleEventDto"
                             }
                         }
                     },
                     "400": {
                         "description": "Bad Request",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/controllers.ErrorResponse"
-                                }
-                            }
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorResponse"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/controllers.ErrorResponse"
-                                }
-                            }
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorResponse"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/controllers.ErrorResponse"
-                                }
-                            }
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/controllers.ErrorResponse"
-                                }
-                            }
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorResponse"
                         }
                     }
                 }
@@ -696,93 +531,68 @@
                     }
                 ],
                 "description": "Searches all upcoming events using a text query. Returns up to 10 results.",
+                "produces": [
+                    "application/json"
+                ],
                 "tags": [
                     "Events"
                 ],
                 "summary": "Search Events",
                 "parameters": [
                     {
+                        "type": "string",
                         "description": "API key for authentication",
                         "name": "apiKey",
                         "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
+                        "required": true
                     },
                     {
+                        "type": "string",
                         "example": "\"Liverpool\"",
                         "description": "Search term (min 3 characters)",
                         "name": "query",
                         "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
+                        "required": true
                     }
                 ],
                 "responses": {
                     "200": {
                         "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/components/schemas/dto.SimpleEventDto"
-                                    }
-                                }
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/dto.SimpleEventDto"
                             }
                         }
                     },
                     "400": {
                         "description": "Bad Request",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/controllers.ErrorResponse"
-                                }
-                            }
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorResponse"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/controllers.ErrorResponse"
-                                }
-                            }
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorResponse"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/controllers.ErrorResponse"
-                                }
-                            }
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorResponse"
                         }
                     },
                     "404": {
                         "description": "Not Found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/controllers.ErrorResponse"
-                                }
-                            }
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/controllers.ErrorResponse"
-                                }
-                            }
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorResponse"
                         }
                     }
                 }
@@ -796,90 +606,65 @@
                     }
                 ],
                 "description": "Returns a single event by its unique identifier",
+                "produces": [
+                    "application/json"
+                ],
                 "tags": [
                     "Events"
                 ],
                 "summary": "Get Event by ID",
                 "parameters": [
                     {
+                        "type": "string",
                         "description": "API key for authentication",
                         "name": "apiKey",
                         "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
+                        "required": true
                     },
                     {
+                        "type": "integer",
                         "example": 123456,
                         "description": "Event ID",
                         "name": "id",
                         "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
+                        "required": true
                     }
                 ],
                 "responses": {
                     "200": {
                         "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/dto.SimpleEventDto"
-                                }
-                            }
+                        "schema": {
+                            "$ref": "#/definitions/dto.SimpleEventDto"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/controllers.ErrorResponse"
-                                }
-                            }
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorResponse"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/controllers.ErrorResponse"
-                                }
-                            }
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorResponse"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/controllers.ErrorResponse"
-                                }
-                            }
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorResponse"
                         }
                     },
                     "404": {
                         "description": "Not Found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/controllers.ErrorResponse"
-                                }
-                            }
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/controllers.ErrorResponse"
-                                }
-                            }
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorResponse"
                         }
                     }
                 }
@@ -893,93 +678,68 @@
                     }
                 ],
                 "description": "Returns a list of leagues (name, slug, event count) for a specified sport",
+                "produces": [
+                    "application/json"
+                ],
                 "tags": [
                     "Leagues"
                 ],
                 "summary": "Get Leagues",
                 "parameters": [
                     {
+                        "type": "string",
                         "description": "API key for authentication",
                         "name": "apiKey",
                         "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
+                        "required": true
                     },
                     {
+                        "type": "string",
                         "example": "\"football\"",
                         "description": "Sport slug (e.g. football, basketball)",
                         "name": "sport",
                         "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
+                        "required": true
                     }
                 ],
                 "responses": {
                     "200": {
                         "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/components/schemas/controllers.LeagueResponse"
-                                    }
-                                }
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/controllers.LeagueResponse"
                             }
                         }
                     },
                     "400": {
                         "description": "Bad Request",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/controllers.ErrorResponse"
-                                }
-                            }
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorResponse"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/controllers.ErrorResponse"
-                                }
-                            }
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorResponse"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/controllers.ErrorResponse"
-                                }
-                            }
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorResponse"
                         }
                     },
                     "404": {
                         "description": "Not Found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/controllers.ErrorResponse"
-                                }
-                            }
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/controllers.ErrorResponse"
-                                }
-                            }
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorResponse"
                         }
                     }
                 }
@@ -993,100 +753,73 @@
                     }
                 ],
                 "description": "Returns odds comparison for a specific event from selected bookmakers.",
+                "produces": [
+                    "application/json"
+                ],
                 "tags": [
                     "Odds"
                 ],
                 "summary": "Get Event Odds",
                 "parameters": [
                     {
+                        "type": "string",
                         "description": "API key for authentication",
                         "name": "apiKey",
                         "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
+                        "required": true
                     },
                     {
+                        "type": "string",
                         "example": "\"123456\"",
                         "description": "Event ID",
                         "name": "eventId",
                         "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
+                        "required": true
                     },
                     {
+                        "type": "string",
                         "example": "\"Bet365,Unibet\"",
                         "description": "Comma-separated list of bookmaker names (max 30)",
                         "name": "bookmakers",
                         "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
+                        "required": true
                     }
                 ],
                 "responses": {
                     "200": {
                         "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/controllers.EventResponse"
-                                }
-                            }
+                        "schema": {
+                            "$ref": "#/definitions/controllers.EventResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/controllers.ErrorResponse"
-                                }
-                            }
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorResponse"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/controllers.ErrorResponse"
-                                }
-                            }
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorResponse"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/controllers.ErrorResponse"
-                                }
-                            }
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorResponse"
                         }
                     },
                     "404": {
                         "description": "Not Found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/controllers.ErrorResponse"
-                                }
-                            }
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/controllers.ErrorResponse"
-                                }
-                            }
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorResponse"
                         }
                     }
                 }
@@ -1100,116 +833,85 @@
                     }
                 ],
                 "description": "Returns all historical odds movements for a specific market type and handicap line of a specific event from a bookmaker.",
+                "produces": [
+                    "application/json"
+                ],
                 "tags": [
                     "Odds"
                 ],
                 "summary": "Get Odds Movements",
                 "parameters": [
                     {
+                        "type": "string",
                         "description": "API key for authentication",
                         "name": "apiKey",
                         "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
+                        "required": true
                     },
                     {
+                        "type": "string",
                         "example": "\"123456\"",
                         "description": "Event ID",
                         "name": "eventId",
                         "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
+                        "required": true
                     },
                     {
+                        "type": "string",
                         "description": "Bookmaker name (e.g. Bet365, Pinnacle)",
                         "name": "bookmaker",
                         "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
+                        "required": true
                     },
                     {
+                        "type": "string",
                         "description": "Market type name (e.g. ML, Spread, Totals)",
                         "name": "market",
                         "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
+                        "required": true
                     },
                     {
+                        "type": "string",
                         "description": "Handicap line (e.g. 0.5, 1.0, 2.5) - not required for ML markets",
                         "name": "marketLine",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
+                        "in": "query"
                     }
                 ],
                 "responses": {
                     "200": {
                         "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/controllers.HandicapMovementsResponse"
-                                }
-                            }
+                        "schema": {
+                            "$ref": "#/definitions/controllers.HandicapMovementsResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/controllers.ErrorResponse"
-                                }
-                            }
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorResponse"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/controllers.ErrorResponse"
-                                }
-                            }
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorResponse"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/controllers.ErrorResponse"
-                                }
-                            }
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorResponse"
                         }
                     },
                     "404": {
                         "description": "Not Found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/controllers.ErrorResponse"
-                                }
-                            }
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/controllers.ErrorResponse"
-                                }
-                            }
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorResponse"
                         }
                     }
                 }
@@ -1218,81 +920,62 @@
         "/odds/multi": {
             "get": {
                 "description": "Returns odds comparison for up to 10 events from selected bookmakers (counts as only 1 request).",
+                "produces": [
+                    "application/json"
+                ],
                 "tags": [
                     "Odds"
                 ],
                 "summary": "Get Odds for Multiple Events",
                 "parameters": [
                     {
+                        "type": "string",
                         "description": "API key for authentication",
                         "name": "apiKey",
                         "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
+                        "required": true
                     },
                     {
+                        "type": "string",
                         "description": "Comma-separated list of up to 10 Event IDs",
                         "name": "eventIds",
                         "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
+                        "required": true
                     },
                     {
+                        "type": "string",
                         "description": "Comma-separated list of bookmaker names (max 30)",
                         "name": "bookmakers",
                         "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
+                        "required": true
                     }
                 ],
                 "responses": {
                     "200": {
                         "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/components/schemas/controllers.EventResponse"
-                                    }
-                                }
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/controllers.EventResponse"
                             }
                         }
                     },
                     "400": {
                         "description": "Bad Request",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/controllers.ErrorResponse"
-                                }
-                            }
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorResponse"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/controllers.ErrorResponse"
-                                }
-                            }
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorResponse"
                         }
                     },
                     "404": {
                         "description": "Not Found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/controllers.ErrorResponse"
-                                }
-                            }
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorResponse"
                         }
                     }
                 }
@@ -1301,90 +984,217 @@
         "/odds/updated": {
             "get": {
                 "description": "Returns updated event odds for a specific bookmaker since a given UNIX timestamp (max 1 minute old)",
+                "produces": [
+                    "application/json"
+                ],
                 "tags": [
                     "Odds"
                 ],
-                "summary": "Get Updated Odds",
+                "summary": "Get updated event odds since a given timestamp",
                 "parameters": [
                     {
+                        "type": "string",
                         "description": "API key for authentication",
                         "name": "apiKey",
                         "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
+                        "required": true
                     },
                     {
+                        "type": "integer",
                         "description": "Unix timestamp (max 1 minute old)",
                         "name": "since",
                         "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
+                        "required": true
                     },
                     {
+                        "type": "string",
                         "description": "Bookmaker name (e.g. Bet365)",
                         "name": "bookmaker",
                         "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
+                        "required": true
                     },
                     {
+                        "type": "string",
                         "description": "Sport name (e.g. Football)",
                         "name": "sport",
                         "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
+                        "required": true
                     }
                 ],
                 "responses": {
                     "200": {
                         "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/components/schemas/controllers.EventResponse"
-                                    }
-                                }
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/controllers.EventResponse"
                             }
                         }
                     },
                     "400": {
                         "description": "Bad Request",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/controllers.ErrorResponse"
-                                }
-                            }
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorResponse"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/controllers.ErrorResponse"
-                                }
-                            }
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorResponse"
                         }
                     },
                     "404": {
                         "description": "Not Found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/controllers.ErrorResponse"
-                                }
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/participants": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Returns participants (teams) for a specified sport",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Participants"
+                ],
+                "summary": "Get Participants",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "API key for authentication",
+                        "name": "apiKey",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "example": "\"football\"",
+                        "description": "Sport slug (e.g. football)",
+                        "name": "sport",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "example": "\"Chelsea\"",
+                        "description": "Search term to filter by name",
+                        "name": "search",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/components/schemas/dto.ParticipantDto"
                             }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/participants/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Returns a single participant by its unique identifier",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Participants"
+                ],
+                "summary": "Get Participant by ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "API key for authentication",
+                        "name": "apiKey",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "example": 38,
+                        "description": "Participant ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/components/schemas/dto.ParticipantDto"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorResponse"
                         }
                     }
                 }
@@ -1393,6 +1203,9 @@
         "/sports": {
             "get": {
                 "description": "Returns a list of sports with name and slug",
+                "produces": [
+                    "application/json"
+                ],
                 "tags": [
                     "Sports"
                 ],
@@ -1400,65 +1213,41 @@
                 "responses": {
                     "200": {
                         "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/components/schemas/controllers.SportResponse"
-                                    }
-                                }
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/controllers.SportResponse"
                             }
                         }
                     },
                     "400": {
                         "description": "Bad Request",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/controllers.ErrorResponse"
-                                }
-                            }
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorResponse"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/controllers.ErrorResponse"
-                                }
-                            }
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorResponse"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/controllers.ErrorResponse"
-                                }
-                            }
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorResponse"
                         }
                     },
                     "404": {
                         "description": "Not Found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/controllers.ErrorResponse"
-                                }
-                            }
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/controllers.ErrorResponse"
-                                }
-                            }
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorResponse"
                         }
                     }
                 }
@@ -1472,102 +1261,75 @@
                     }
                 ],
                 "description": "Returns value bets for a specific bookmaker with optional match info. Updated every 5 seconds.",
+                "produces": [
+                    "application/json"
+                ],
                 "tags": [
                     "Value Bets"
                 ],
                 "summary": "Get Value Bets",
                 "parameters": [
                     {
+                        "type": "string",
                         "description": "API key for authentication",
                         "name": "apiKey",
                         "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
+                        "required": true
                     },
                     {
+                        "type": "string",
                         "example": "\"Bet365\"",
                         "description": "Bookmaker name (e.g. Bet365)",
                         "name": "bookmaker",
                         "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
+                        "required": true
                     },
                     {
+                        "type": "boolean",
                         "example": true,
                         "description": "Include event details",
                         "name": "includeEventDetails",
-                        "in": "query",
-                        "schema": {
-                            "type": "boolean"
-                        }
+                        "in": "query"
                     }
                 ],
                 "responses": {
                     "200": {
                         "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/components/schemas/dto.EventValueBet"
-                                    }
-                                }
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/dto.EventValueBet"
                             }
                         }
                     },
                     "400": {
                         "description": "Bad Request",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/controllers.ErrorResponse"
-                                }
-                            }
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorResponse"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/controllers.ErrorResponse"
-                                }
-                            }
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorResponse"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/controllers.ErrorResponse"
-                                }
-                            }
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorResponse"
                         }
                     },
                     "404": {
                         "description": "Not Found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/controllers.ErrorResponse"
-                                }
-                            }
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/controllers.ErrorResponse"
-                                }
-                            }
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ErrorResponse"
                         }
                     }
                 }
@@ -2070,17 +1832,38 @@
                     }
                 }
             },
+            "dto.ParticipantDto": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "sport": {
+                        "description": "slug format (e.g., \"football\")",
+                        "type": "string"
+                    }
+                }
+            },
             "dto.SimpleEventDto": {
                 "type": "object",
                 "properties": {
                     "away": {
                         "type": "string"
                     },
+                    "awayId": {
+                        "type": "integer"
+                    },
                     "date": {
                         "type": "string"
                     },
                     "home": {
                         "type": "string"
+                    },
+                    "homeId": {
+                        "type": "integer"
                     },
                     "id": {
                         "type": "integer"
