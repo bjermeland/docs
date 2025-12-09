@@ -530,6 +530,15 @@
                         "schema": {
                             "type": "string"
                         }
+                    },
+                    {
+                        "example": "\"Pinnacle\"",
+                        "description": "Filter by bookmaker name - returns only events that have odds available from this bookmaker (e.g. Pinnacle)",
+                        "name": "bookmaker",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
                     }
                 ],
                 "responses": {
