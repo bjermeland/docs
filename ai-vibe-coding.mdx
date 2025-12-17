@@ -1,0 +1,301 @@
+---
+title: "AI & Vibe Coding"
+description: "Use AI tools like ChatGPT, Claude, Cursor, and VS Code Copilot to build with the Odds-API.io. Access AI-ready documentation, OpenAPI specs, and MCP server integration."
+icon: "wand-magic-sparkles"
+---
+
+## Overview
+
+We provide AI-ready resources to help you build faster with AI coding assistants. Whether you're using ChatGPT, Claude, Cursor, VS Code Copilot, or other AI tools, we have resources that give these tools the context they need to generate accurate, production-ready code.
+
+## AI Resources
+
+<CardGroup cols={2}>
+  <Card title="Documentation Index" icon="list" href="https://docs.odds-api.io/llms.txt">
+    Compact index of all documentation pages (~2K tokens). Perfect for AI tools to discover relevant pages.
+  </Card>
+  <Card title="Full Documentation" icon="file-lines" href="https://docs.odds-api.io/llms-full.txt">
+    Complete documentation in a single file (~15K tokens). Ideal for AI tools with large context windows.
+  </Card>
+  <Card title="OpenAPI Specification" icon="code" href="https://docs.odds-api.io/api-reference/openapi.json">
+    Machine-readable API definition with complete request/response schemas.
+  </Card>
+  <Card title="MCP Server" icon="plug" href="#mcp-server">
+    Direct AI integration for Claude, Cursor, and VS Code with live API access.
+  </Card>
+</CardGroup>
+
+## Quick Start: Copy-Paste Context
+
+Copy this context block and paste it into your AI tool for instant API knowledge:
+
+```
+You are helping me build with the Odds-API.io sports betting odds API.
+
+API Base URL: https://api2.odds-api.io/v3
+Authentication: API key as query parameter (?apiKey=YOUR_KEY)
+
+Key endpoints:
+- GET /sports - List sports (no auth)
+- GET /bookmakers - List bookmakers (no auth)
+- GET /events?sport={slug}&apiKey={key} - Get events
+- GET /odds?eventId={id}&bookmakers={list}&apiKey={key} - Get odds
+- GET /odds/multi?eventIds={ids}&bookmakers={list}&apiKey={key} - Batch odds (up to 10 events)
+- GET /value-bets?bookmaker={name}&apiKey={key} - Value betting opportunities
+- GET /arbitrage-bets?bookmakers={list}&apiKey={key} - Arbitrage opportunities
+
+For complete documentation, fetch: https://docs.odds-api.io/llms-full.txt
+For OpenAPI spec: https://docs.odds-api.io/api-reference/openapi.json
+```
+
+## Setup by Tool
+
+<Tabs>
+<Tab title="Claude">
+
+### Claude (chat.anthropic.com)
+
+1. Start a new conversation
+2. Paste the context block above, or
+3. Ask Claude to fetch the full documentation:
+
+```
+Please fetch and read https://docs.odds-api.io/llms-full.txt to understand the Odds-API.io API, then help me [your task].
+```
+
+</Tab>
+
+<Tab title="ChatGPT">
+
+### ChatGPT
+
+1. Start a new conversation
+2. Paste the context block above, or
+3. Provide the documentation URL:
+
+```
+Read the documentation at https://docs.odds-api.io/llms-full.txt and help me build [your project] using the Odds-API.io API.
+```
+
+</Tab>
+
+<Tab title="Cursor">
+
+### Cursor IDE
+
+**Option 1: Project Rules**
+
+Create `.cursor/rules.md` in your project:
+
+```markdown
+# Odds-API.io Integration
+
+This project uses the Odds-API.io sports betting odds API.
+
+API Base URL: https://api2.odds-api.io/v3
+Auth: API key as query parameter (?apiKey=YOUR_KEY)
+
+Documentation: https://docs.odds-api.io/llms-full.txt
+OpenAPI Spec: https://docs.odds-api.io/api-reference/openapi.json
+
+Key endpoints:
+- GET /sports - List sports (no auth)
+- GET /bookmakers - List bookmakers (no auth)
+- GET /events?sport={slug}&apiKey={key} - Get events
+- GET /odds?eventId={id}&bookmakers={list}&apiKey={key} - Get odds
+- GET /value-bets?bookmaker={name}&apiKey={key} - Value bets
+```
+
+**Option 2: MCP Server**
+
+See the [MCP Server](#mcp-server) section below for direct API integration.
+
+</Tab>
+
+<Tab title="VS Code">
+
+### VS Code with GitHub Copilot
+
+Add context to your workspace by creating a `.github/copilot-instructions.md` file:
+
+```markdown
+# Odds-API.io Context
+
+This project integrates with Odds-API.io for sports betting odds data.
+
+Base URL: https://api2.odds-api.io/v3
+Authentication: API key as query parameter
+
+Key endpoints:
+- GET /sports - List available sports
+- GET /events?sport={slug}&apiKey={key} - Get events
+- GET /odds?eventId={id}&bookmakers={list}&apiKey={key} - Get odds
+
+Full docs: https://docs.odds-api.io/llms-full.txt
+```
+
+</Tab>
+
+<Tab title="Claude Code">
+
+### Claude Code CLI
+
+1. Create a `CLAUDE.md` file in your project root:
+
+```markdown
+# Odds-API.io Project
+
+This project uses the Odds-API.io sports betting odds API.
+
+## API Reference
+
+Base URL: https://api2.odds-api.io/v3
+Auth: API key as query parameter (?apiKey=YOUR_KEY)
+
+Full documentation: https://docs.odds-api.io/llms-full.txt
+OpenAPI spec: https://docs.odds-api.io/api-reference/openapi.json
+
+## Key Endpoints
+
+- GET /sports - List sports (no auth required)
+- GET /bookmakers - List bookmakers (no auth required)
+- GET /events?sport={slug}&apiKey={key} - Get events for a sport
+- GET /odds?eventId={id}&bookmakers={list}&apiKey={key} - Get odds
+- GET /value-bets?bookmaker={name}&apiKey={key} - Get value bets
+- GET /arbitrage-bets?bookmakers={list}&apiKey={key} - Get arbitrage opportunities
+
+## Environment Variables
+
+ODDS_API_KEY - Your API key from odds-api.io
+```
+
+2. Run `claude` in your project directory
+
+</Tab>
+</Tabs>
+
+## MCP Server
+
+The Model Context Protocol (MCP) server provides direct API integration for AI tools, allowing them to fetch live data from your Odds-API.io account.
+
+### Features
+
+- **12 API tools** - Get sports, bookmakers, events, odds, value bets, and arbitrage opportunities
+- **Documentation resources** - Access full docs and OpenAPI spec directly
+- **Real-time data** - Fetch live odds and events
+
+### Setup
+
+<Tabs>
+<Tab title="Claude Code">
+
+```bash
+claude mcp add odds-api --env ODDS_API_KEY="your-api-key" -- npx -y odds-api-mcp-server
+```
+
+</Tab>
+
+<Tab title="Claude Desktop">
+
+Add to `~/.config/claude/claude_desktop_config.json`:
+
+```json
+{
+  "mcpServers": {
+    "odds-api": {
+      "command": "npx",
+      "args": ["-y", "@odds-api/mcp-server"],
+      "env": {
+        "ODDS_API_KEY": "your-api-key"
+      }
+    }
+  }
+}
+```
+
+</Tab>
+
+<Tab title="Cursor">
+
+Add to your Cursor MCP settings:
+
+```json
+{
+  "odds-api": {
+    "command": "npx",
+    "args": ["-y", "@odds-api/mcp-server"],
+    "env": {
+      "ODDS_API_KEY": "your-api-key"
+    }
+  }
+}
+```
+
+</Tab>
+</Tabs>
+
+### Available Tools
+
+| Tool | Description |
+|------|-------------|
+| `get_sports` | List all available sports |
+| `get_bookmakers` | List all available bookmakers |
+| `get_leagues` | Get leagues for a sport |
+| `get_events` | Get events with filtering options |
+| `get_live_events` | Get currently live events |
+| `search_events` | Search events by text |
+| `get_odds` | Get odds for an event |
+| `get_multi_odds` | Get odds for multiple events |
+| `get_value_bets` | Get value betting opportunities |
+| `get_arbitrage_bets` | Get arbitrage opportunities |
+| `get_participants` | Get teams/participants |
+| `get_documentation` | Get API documentation |
+
+## Example Prompts
+
+Here are some example prompts to get you started:
+
+### Building an Odds Comparison App
+
+```
+Using the Odds-API.io API, help me build a React component that:
+1. Fetches upcoming Premier League matches
+2. Gets odds from Bet365, Pinnacle, and Unibet
+3. Displays a comparison table showing the best odds for each outcome
+```
+
+### Creating a Value Bet Finder
+
+```
+Help me build a Python script that:
+1. Fetches value bets from the Odds-API.io /value-bets endpoint
+2. Filters for bets with > 5% expected value
+3. Sends alerts to a Discord webhook when new value bets are found
+```
+
+### Real-Time Odds Tracker
+
+```
+Create a Node.js service that:
+1. Connects to the Odds-API.io WebSocket
+2. Tracks odds movements for specific events
+3. Stores historical data in a database
+4. Exposes an API endpoint for querying odds history
+```
+
+## Resources
+
+<CardGroup cols={2}>
+  <Card title="API Reference" icon="book" href="/api-reference/introduction">
+    Complete API documentation with all endpoints and parameters.
+  </Card>
+  <Card title="Quickstart Guide" icon="rocket" href="/quickstart">
+    Get up and running with your first API call.
+  </Card>
+  <Card title="Best Practices" icon="lightbulb" href="/guides/best-practices">
+    Optimize your API usage for performance and cost.
+  </Card>
+  <Card title="Code Examples" icon="code" href="/examples/comparing-odds">
+    Ready-to-use code examples for common use cases.
+  </Card>
+</CardGroup>

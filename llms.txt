@@ -1,0 +1,70 @@
+# Odds-API.io Documentation Index for AI Tools
+# This file provides an index of documentation pages for LLMs and AI coding assistants
+
+## Overview
+Odds-API.io is a sports betting odds comparison API providing real-time data from 265 bookmakers across 34 sports.
+
+## Documentation URLs
+
+https://docs.odds-api.io/ - Introduction and overview of the API
+https://docs.odds-api.io/quickstart - Get started with your first API call
+https://docs.odds-api.io/authentication - API key authentication and security
+
+## Guides
+
+https://docs.odds-api.io/guides/fetching-odds - Fetch and compare odds from multiple bookmakers
+https://docs.odds-api.io/guides/value-bets - Find positive expected value betting opportunities
+https://docs.odds-api.io/guides/websockets - Real-time odds updates via WebSocket
+https://docs.odds-api.io/guides/best-practices - Optimize API usage and performance
+
+## API Reference
+
+https://docs.odds-api.io/api-reference/introduction - API overview and authentication
+https://docs.odds-api.io/api-reference/websocket - WebSocket API documentation
+
+## AI Resources
+
+https://docs.odds-api.io/llms-full.txt - Full documentation in a single file (for large context AI tools)
+https://docs.odds-api.io/api-reference/openapi.json - OpenAPI specification with complete schemas
+
+## Base URL
+
+https://api2.odds-api.io/v3
+
+## Key Endpoints
+
+GET /sports - List available sports (no auth required)
+GET /bookmakers - List available bookmakers (no auth required)
+GET /leagues?sport={slug}&apiKey={key} - List leagues for a sport
+GET /events?sport={slug}&apiKey={key} - List events for a sport
+GET /events/live?apiKey={key} - Get currently live events
+GET /events/search?query={term}&apiKey={key} - Search events
+GET /events/{id}?apiKey={key} - Get event by ID
+GET /odds?eventId={id}&bookmakers={list}&apiKey={key} - Get odds for an event
+GET /odds/multi?eventIds={ids}&bookmakers={list}&apiKey={key} - Get odds for multiple events (up to 10)
+GET /odds/updated?since={timestamp}&bookmaker={name}&sport={name}&apiKey={key} - Get recently updated odds
+GET /odds/movements?eventId={id}&bookmaker={name}&market={name}&apiKey={key} - Get odds movement history
+GET /value-bets?bookmaker={name}&apiKey={key} - Get value betting opportunities
+GET /arbitrage-bets?bookmakers={list}&apiKey={key} - Get arbitrage opportunities
+GET /participants?sport={slug}&apiKey={key} - Get teams/participants
+GET /bookmakers/selected?apiKey={key} - Get user's selected bookmakers
+PUT /bookmakers/selected/select?bookmakers={list}&apiKey={key} - Select bookmakers
+
+## Authentication
+
+All endpoints except /sports and /bookmakers require an API key passed as query parameter:
+?apiKey=YOUR_API_KEY
+
+## Rate Limits
+
+5,000 requests/hour on all plans
+Additional packages: +10K/20K/30K requests/hour available
+
+## Supported Sports (34 total)
+
+football, basketball, tennis, baseball, american-football, ice-hockey, esports, darts, mixed-martial-arts, boxing, handball, volleyball, snooker, table-tennis, rugby, cricket, water-polo, futsal, beach-volleyball, aussie-rules, floorball, squash, beach-soccer, lacrosse, curling, padel, bandy, gaelic-football, beach-handball, athletics, badminton, cross-country, golf, cycling
+
+## Contact
+
+Support: hello@odds-api.io
+Website: https://odds-api.io
