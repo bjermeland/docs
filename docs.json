@@ -111,5 +111,18 @@
     "socials": {
       "x": "https://x.com/oddsapi_io"
     }
+  },
+  "seo": {
+    "indexing": "all",
+    "metatags": {
+      "canonical": "https://docs.odds-api.io",
+      "description": "Official documentation for Odds-API.io - Real-time sports betting odds API with coverage of 80+ bookmakers and 40+ sports worldwide.",
+      "keywords": "odds api, sports betting api, betting odds, real-time odds, bookmaker odds, sports data api, arbitrage betting, value bets",
+      "og:site_name": "Odds-API.io Documentation",
+      "og:type": "website",
+      "og:image": "https://docs.odds-api.io/images/og-image.jpg",
+      "twitter:card": "summary_large_image",
+      "twitter:site": "@oddsapi_io"
+    }
   }
 }
