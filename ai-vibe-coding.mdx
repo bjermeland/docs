@@ -8,22 +8,30 @@ icon: "wand-magic-sparkles"
 
 We provide AI-ready resources to help you build faster with AI coding assistants. Whether you're using ChatGPT, Claude, Cursor, VS Code Copilot, or other AI tools, we have resources that give these tools the context they need to generate accurate, production-ready code.
 
-## AI Resources
+## Machine-Readable Documentation
 
-<CardGroup cols={2}>
-  <Card title="Documentation Index" icon="list" href="https://docs.odds-api.io/llms.txt">
-    Compact index of all documentation pages (~2K tokens). Perfect for AI tools to discover relevant pages.
-  </Card>
-  <Card title="Full Documentation" icon="file-lines" href="https://docs.odds-api.io/llms-full.txt">
-    Complete documentation in a single file (~15K tokens). Ideal for AI tools with large context windows.
-  </Card>
-  <Card title="OpenAPI Specification" icon="code" href="https://docs.odds-api.io/api-reference/openapi.json">
-    Machine-readable API definition with complete request/response schemas.
-  </Card>
-  <Card title="MCP Server" icon="plug" href="#mcp-server">
-    Direct AI integration for Claude, Cursor, and VS Code with live API access.
-  </Card>
-</CardGroup>
+We provide documentation in formats optimized for AI coding tools:
+
+### Documentation Index
+A lightweight file listing all documentation pages with URLs and descriptions. AI tools can scan this to find relevant pages to fetch.
+
+**URL:** [`https://docs.odds-api.io/llms.txt`](https://docs.odds-api.io/llms.txt)
+**Size:** ~500 tokens
+
+### Complete Documentation
+The entire API documentation compiled into a single text file. Best for AI tools with large context windows that can ingest everything at once.
+
+**URL:** [`https://docs.odds-api.io/llms-full.txt`](https://docs.odds-api.io/llms-full.txt)
+**Size:** ~2.5k tokens
+
+### OpenAPI Specification
+Machine-readable API definition following the OpenAPI 3.0 standard. Contains all endpoints, parameters, request/response schemas, and examples.
+
+**URL:** [`https://docs.odds-api.io/api-reference/openapi.json`](https://docs.odds-api.io/api-reference/openapi.json)
+**Size:** ~22k tokens
+
+### MCP Server
+For AI tools that support the Model Context Protocol, our MCP server provides direct API access. See [setup instructions](#mcp-server) below.
 
 ## Quick Start: Copy-Paste Context
 
