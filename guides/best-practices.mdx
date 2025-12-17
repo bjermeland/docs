@@ -91,6 +91,24 @@ const popularUSBookmakers = [
 const odds = await fetchOdds(eventId, popularEUBookmakers.join(','));
 ```
 
+### 4. Filter Events by Bookmaker
+
+When you only care about events available at specific bookmakers, use the `bookmaker` parameter on the events endpoint. This returns only events that have odds from that bookmaker:
+
+```javascript
+// ✅ Only get events with Bet365 odds
+const response = await fetch(
+  `https://api2.odds-api.io/v3/events?apiKey=${apiKey}&sport=football&bookmaker=Bet365`
+);
+
+const events = await response.json();
+// All returned events are guaranteed to have Bet365 odds
+```
+
+<Tip>
+  This is much more efficient than fetching all events and then filtering client-side. It reduces response size and ensures you only process relevant events.
+</Tip>
+
 ## Rate Limit Management
 
 ### 1. Implement Rate Limiting

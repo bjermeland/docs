@@ -616,11 +616,16 @@ BEST PRACTICES
    - Request only bookmakers your users need
    - Reduces response size and processing time
 
-4. Handle Errors Gracefully
+4. Filter Events by Bookmaker
+   - Use ?bookmaker=Bet365 on /events endpoint to only get events with odds from that bookmaker
+   - Much more efficient than fetching all events and filtering client-side
+   - Example: /events?sport=football&bookmaker=Bet365&apiKey={key}
+
+5. Handle Errors Gracefully
    - Implement exponential backoff for rate limits (429)
    - Not all bookmakers offer all markets
 
-5. Monitor Rate Limits
+6. Monitor Rate Limits
    - Check response headers for remaining requests
    - Implement queuing for high-volume applications
 
