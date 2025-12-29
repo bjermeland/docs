@@ -29,7 +29,7 @@ Odds-API.io uses API key authentication. Include your API key as a query paramet
   https://api2.odds-api.io/v3/events?apiKey=YOUR_API_KEY&sport=football
 
 Getting Your API Key:
-1. Sign up for a trial at https://odds-api.io
+1. Sign up for free at https://odds-api.io
 2. Check your email for the API key
 3. Store it securely in environment variables
 
