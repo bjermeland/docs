@@ -12,7 +12,7 @@ One of the most powerful use cases for the Odds-API.io is building odds comparis
 Different bookmakers offer different odds for the same event. Even small differences can significantly impact long-term profitability:
 
 - **Bet365** offers 2.10 for Manchester United to win
-- **Pinnacle** offers 2.15 for the same outcome
+- **SingBet** offers 2.15 for the same outcome
 - **Unibet** offers 2.08
 
 By consistently betting at the best odds, a bettor can increase their returns by **5-10% over time**.
@@ -63,7 +63,7 @@ Now get odds from popular bookmakers:
 
 ```javascript
 const eventId = 123456;
-const bookmakers = 'Bet365,Pinnacle,Unibet,William Hill,Betway';
+const bookmakers = 'Bet365,SingBet,Unibet,William Hill,Betway';
 
 const oddsResponse = await fetch(
   `https://api2.odds-api.io/v3/odds?apiKey=${apiKey}&eventId=${eventId}&bookmakers=${bookmakers}`
@@ -102,7 +102,7 @@ const oddsData = await oddsResponse.json();
         "updatedAt": "2025-10-04T10:30:00Z"
       }
     ],
-    "Pinnacle": [
+    "SingBet": [
       {
         "name": "ML",
         "odds": [
@@ -191,7 +191,7 @@ console.log(`Away (${oddsData.away}): ${bestOdds.away.odds} at ${bestOdds.away.b
 ```
 Best Odds for Manchester United vs Liverpool:
 
-Home (Manchester United): 2.15 at Pinnacle
+Home (Manchester United): 2.15 at SingBet
 Draw: 3.45 at Unibet
 Away (Liverpool): 3.25 at Unibet
 ```
@@ -261,7 +261,7 @@ Premier League | 10/15/2025, 3:00:00 PM
 
 Bookmaker           Home           Draw           Away           Updated
 --------------------------------------------------------------------------------
-Pinnacle            2.15           3.35           3.15           10:29:50 AM
+SingBet            2.15           3.35           3.15           10:29:50 AM
 Bet365              2.10           3.40           3.20           10:30:00 AM
 Unibet              2.08           3.45           3.25           10:30:15 AM
 William Hill        2.05           3.40           3.30           10:29:45 AM
@@ -269,7 +269,7 @@ Betway              2.12           3.38           3.18           10:30:10 AM
 --------------------------------------------------------------------------------
 
 Best Odds:
-  Home: 2.15 (Pinnacle)
+  Home: 2.15 (SingBet)
   Draw: 3.45 (Unibet)
   Away: 3.30 (William Hill)
 ```
@@ -334,7 +334,7 @@ async function compareLeagueOdds(sport, league) {
 
   // Get odds for up to 10 events at once using multi-odds endpoint
   const eventIds = events.slice(0, 10).map(e => e.id).join(',');
-  const bookmakers = 'Bet365,Pinnacle,Unibet,William Hill,Betway';
+  const bookmakers = 'Bet365,SingBet,Unibet,William Hill,Betway';
 
   const oddsRes = await fetch(
     `https://api2.odds-api.io/v3/odds/multi?apiKey=${apiKey}&eventIds=${eventIds}&bookmakers=${bookmakers}`
@@ -369,7 +369,7 @@ const app = express();
 app.get('/api/compare/:eventId', async (req, res) => {
   const apiKey = process.env.ODDS_API_KEY;
   const { eventId } = req.params;
-  const bookmakers = 'Bet365,Pinnacle,Unibet,William Hill,Betway,DraftKings,FanDuel';
+  const bookmakers = 'Bet365,SingBet,Unibet,William Hill,Betway,DraftKings,FanDuel';
 
   try {
     const response = await fetch(

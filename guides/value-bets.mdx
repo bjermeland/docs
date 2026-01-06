@@ -193,7 +193,7 @@ monitorValueBets('Bet365', 0.03);
 Monitor value bets across multiple bookmakers:
 
 ```javascript
-const bookmakers = ['Bet365', 'Unibet', 'Pinnacle', 'William Hill'];
+const bookmakers = ['Bet365', 'Unibet', 'SingBet', 'William Hill'];
 
 async function getAllValueBets(minEV = 0.03) {
   const apiKey = process.env.ODDS_API_KEY;
@@ -280,7 +280,7 @@ class ValueBetAlerter {
 
 // Usage
 const alerter = new ValueBetAlerter(process.env.ODDS_API_KEY, 0.03);
-alerter.monitor(['Bet365', 'Unibet', 'Pinnacle']);
+alerter.monitor(['Bet365', 'Unibet', 'SingBet']);
 ```
 
 ## Best Practices

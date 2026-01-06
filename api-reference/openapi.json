@@ -41,8 +41,8 @@
                         }
                     },
                     {
-                        "example": "\"Bet365,Pinnacle\"",
-                        "description": "Comma-separated list of bookmakers (e.g. Bet365,Pinnacle)",
+                        "example": "\"Bet365,SingBet\"",
+                        "description": "Comma-separated list of bookmakers (e.g. Bet365,SingBet)",
                         "name": "bookmakers",
                         "in": "query",
                         "required": true,
@@ -389,8 +389,8 @@
                         }
                     },
                     {
-                        "example": "\"Bet365,Pinnacle\"",
-                        "description": "Comma-separated list of bookmaker names (e.g. Bet365,Pinnacle)",
+                        "example": "\"Bet365,SingBet\"",
+                        "description": "Comma-separated list of bookmaker names (e.g. Bet365,SingBet)",
                         "name": "bookmakers",
                         "in": "query",
                         "required": true,
@@ -532,8 +532,8 @@
                         }
                     },
                     {
-                        "example": "\"Pinnacle\"",
-                        "description": "Filter by bookmaker name - returns only events that have odds available from this bookmaker (e.g. Pinnacle)",
+                        "example": "\"SingBet\"",
+                        "description": "Filter by bookmaker name - returns only events that have odds available from this bookmaker (e.g. SingBet)",
                         "name": "bookmaker",
                         "in": "query",
                         "schema": {
@@ -1134,7 +1134,7 @@
                         }
                     },
                     {
-                        "description": "Bookmaker name (e.g. Bet365, Pinnacle)",
+                        "description": "Bookmaker name (e.g. Bet365, SingBet)",
                         "name": "bookmaker",
                         "in": "query",
                         "required": true,

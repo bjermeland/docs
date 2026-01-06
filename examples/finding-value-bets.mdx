@@ -7,7 +7,7 @@ description: "Use the Odds-API.io Value Bets endpoint to find profitable betting
 
 If you're serious about sports betting, you know how powerful real-time data can be. Whether you're a developer, sports trader, or running a betting platform, fast and reliable odds comparison can give you a major advantage.
 
-With our **Value Bets API**, you get access to real-time odds from over 250 bookmakers, including industry leaders like **Bet365** and **Pinnacle**. This guide will walk you through how to use our API to uncover profitable bets.
+With our **Value Bets API**, you get access to real-time odds from over 250 bookmakers, including industry leaders like **Bet365** and **SingBet**. This guide will walk you through how to use our API to uncover profitable bets.
 
 ## What Is a Value Bet?
 
@@ -175,7 +175,7 @@ Place bet: https://www.bet365.com/#/AC/B1/C1/D8/E181348466/F3/
 To maximize opportunities, monitor value bets across multiple bookmakers:
 
 ```javascript
-const bookmakers = ['Bet365', 'Pinnacle', 'Unibet', 'William Hill', 'DraftKings'];
+const bookmakers = ['Bet365', 'SingBet', 'Unibet', 'William Hill', 'DraftKings'];
 
 async function getAllValueBets() {
   const apiKey = process.env.ODDS_API_KEY;
@@ -212,7 +212,7 @@ class ValueBetMonitor {
   constructor(apiKey, minEV = 5) {
     this.apiKey = apiKey;
     this.minEV = minEV;
-    this.bookmakers = ['Bet365', 'Pinnacle', 'Unibet'];
+    this.bookmakers = ['Bet365', 'SingBet', 'Unibet'];
     this.notifiedBets = new Set();
   }
 
@@ -279,7 +279,7 @@ Here's what sets us apart:
     Odds updated with sub-150ms latency
   </Card>
   <Card title="250+ Bookmakers" icon="building">
-    Including Bet365, Pinnacle, William Hill, DraftKings, and more
+    Including Bet365, SingBet, William Hill, DraftKings, and more
   </Card>
   <Card title="20+ Sports" icon="futbol">
     Football, basketball, tennis, esports, and more
@@ -329,7 +329,7 @@ Need higher limits or additional features? Reach out for custom enterprise solut
   </Accordion>
 
   <Accordion title="What bookmakers are supported?">
-    Over 250 bookmakers worldwide, including Bet365, Pinnacle, Unibet, William Hill, DraftKings, FanDuel, and many more.
+    Over 250 bookmakers worldwide, including Bet365, SingBet, Unibet, William Hill, DraftKings, FanDuel, and many more.
   </Accordion>
 </AccordionGroup>
 

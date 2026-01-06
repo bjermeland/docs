@@ -161,13 +161,13 @@ Finally, let's fetch odds from multiple bookmakers for a specific event:
 <CodeGroup>
 
 ```bash cURL
-curl "https://api2.odds-api.io/v3/odds?apiKey=YOUR_API_KEY&eventId=123456&bookmakers=Bet365,Unibet,Pinnacle"
+curl "https://api2.odds-api.io/v3/odds?apiKey=YOUR_API_KEY&eventId=123456&bookmakers=Bet365,Unibet,SingBet"
 ```
 
 ```javascript JavaScript
 const apiKey = process.env.ODDS_API_KEY;
 const eventId = 123456;
-const bookmakers = 'Bet365,Unibet,Pinnacle';
+const bookmakers = 'Bet365,Unibet,SingBet';
 
 const response = await fetch(
   `https://api2.odds-api.io/v3/odds?apiKey=${apiKey}&eventId=${eventId}&bookmakers=${bookmakers}`
@@ -182,7 +182,7 @@ import os
 
 api_key = os.environ['ODDS_API_KEY']
 event_id = 123456
-bookmakers = 'Bet365,Unibet,Pinnacle'
+bookmakers = 'Bet365,Unibet,SingBet'
 
 response = requests.get(
     'https://api2.odds-api.io/v3/odds',
@@ -200,7 +200,7 @@ print(odds)
 <?php
 $apiKey = getenv('ODDS_API_KEY');
 $eventId = 123456;
-$bookmakers = 'Bet365,Unibet,Pinnacle';
+$bookmakers = 'Bet365,Unibet,SingBet';
 
 $url = 'https://api2.odds-api.io/v3/odds?' . http_build_query([
     'apiKey' => $apiKey,
@@ -226,7 +226,7 @@ print_r($odds);
   "urls": {
     "Bet365": "https://www.bet365.com/...",
     "Unibet": "https://www.unibet.com/...",
-    "Pinnacle": "https://www.unibet.com/..."
+    "SingBet": "https://www.unibet.com/..."
   },
   "bookmakers": {
     "Bet365": [
@@ -255,7 +255,7 @@ print_r($odds);
         "updatedAt": "2025-10-04T10:29:45Z"
       }
     ],
-    "Pinnacle": [
+    "SingBet": [
       {
         "name": "ML",
         "odds": [
