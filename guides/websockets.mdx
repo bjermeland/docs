@@ -40,7 +40,7 @@ We recommend all clients move to WebSocket for efficiency and lower latency. It 
 
 **Endpoint:**
 ```
-wss://api2.odds-api.io/v3/ws?apiKey=YOUR_API_KEY
+wss://api.odds-api.io/v3/ws?apiKey=YOUR_API_KEY
 ```
 
 **Optional Filters:**
@@ -110,7 +110,7 @@ Messages come in as JSON objects. Each has a `type` field:
 const WebSocket = require('ws');
 
 const apiKey = process.env.ODDS_API_KEY;
-const ws = new WebSocket(`wss://api2.odds-api.io/v3/ws?apiKey=${apiKey}`);
+const ws = new WebSocket(`wss://api.odds-api.io/v3/ws?apiKey=${apiKey}`);
 
 ws.onopen = () => {
   console.log("Connected to Odds-API WebSocket");
@@ -142,7 +142,7 @@ ws.onmessage = (event) => {
 
 ```javascript Browser
 const apiKey = 'YOUR_API_KEY';
-const ws = new WebSocket(`wss://api2.odds-api.io/v3/ws?apiKey=${apiKey}`);
+const ws = new WebSocket(`wss://api.odds-api.io/v3/ws?apiKey=${apiKey}`);
 
 ws.onopen = () => console.log("Connected");
 ws.onclose = () => console.log("Disconnected");
@@ -193,7 +193,7 @@ def on_close(ws, close_status_code, close_msg):
 
 # Create WebSocket connection
 ws = websocket.WebSocketApp(
-    f"wss://api2.odds-api.io/v3/ws?apiKey={api_key}",
+    f"wss://api.odds-api.io/v3/ws?apiKey={api_key}",
     on_open=on_open,
     on_message=on_message,
     on_error=on_error,
@@ -211,7 +211,7 @@ ws.run_forever()
 use WebSocket\Client;
 
 $apiKey = getenv('ODDS_API_KEY');
-$client = new Client("wss://api2.odds-api.io/v3/ws?apiKey={$apiKey}");
+$client = new Client("wss://api.odds-api.io/v3/ws?apiKey={$apiKey}");
 
 echo "Connected to Odds-API WebSocket\n";
 
@@ -300,7 +300,7 @@ class LiveOddsTracker {
 
   connect() {
     this.ws = new WebSocket(
-      `wss://api2.odds-api.io/v3/ws?apiKey=${this.apiKey}`
+      `wss://api.odds-api.io/v3/ws?apiKey=${this.apiKey}`
     );
 
     this.ws.onopen = () => {
@@ -451,7 +451,7 @@ function useLiveOdds(apiKey) {
 
   useEffect(() => {
     ws.current = new WebSocket(
-      `wss://api2.odds-api.io/v3/ws?apiKey=${apiKey}`
+      `wss://api.odds-api.io/v3/ws?apiKey=${apiKey}`
     );
 
     ws.current.onopen = () => {

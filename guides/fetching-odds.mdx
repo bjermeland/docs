@@ -30,7 +30,7 @@ const eventId = 123456;
 const bookmakers = ['Bet365', 'Unibet', 'SingBet'].join(',');
 
 const response = await fetch(
-  `https://api2.odds-api.io/v3/odds?apiKey=${apiKey}&eventId=${eventId}&bookmakers=${bookmakers}`
+  `https://api.odds-api.io/v3/odds?apiKey=${apiKey}&eventId=${eventId}&bookmakers=${bookmakers}`
 );
 
 const data = await response.json();
@@ -46,7 +46,7 @@ event_id = 123456
 bookmakers = 'Bet365,Unibet,SingBet'
 
 response = requests.get(
-    'https://api2.odds-api.io/v3/odds',
+    'https://api.odds-api.io/v3/odds',
     params={
         'apiKey': api_key,
         'eventId': event_id,
@@ -64,7 +64,7 @@ $apiKey = getenv('ODDS_API_KEY');
 $eventId = 123456;
 $bookmakers = 'Bet365,Unibet,SingBet';
 
-$url = 'https://api2.odds-api.io/v3/odds?' . http_build_query([
+$url = 'https://api.odds-api.io/v3/odds?' . http_build_query([
     'apiKey' => $apiKey,
     'eventId' => $eventId,
     'bookmakers' => $bookmakers
@@ -89,7 +89,7 @@ const eventIds = [123456, 123457, 123458].join(',');
 const bookmakers = ['Bet365', 'Unibet'].join(',');
 
 const response = await fetch(
-  `https://api2.odds-api.io/v3/odds/multi?apiKey=${apiKey}&eventIds=${eventIds}&bookmakers=${bookmakers}`
+  `https://api.odds-api.io/v3/odds/multi?apiKey=${apiKey}&eventIds=${eventIds}&bookmakers=${bookmakers}`
 );
 
 const data = await response.json();
@@ -106,7 +106,7 @@ event_ids = '123456,123457,123458'
 bookmakers = 'Bet365,Unibet'
 
 response = requests.get(
-    'https://api2.odds-api.io/v3/odds/multi',
+    'https://api.odds-api.io/v3/odds/multi',
     params={
         'apiKey': api_key,
         'eventIds': event_ids,
@@ -243,7 +243,7 @@ const bookmaker = 'Bet365';
 const sport = 'Football';
 
 const response = await fetch(
-  `https://api2.odds-api.io/v3/odds/updated?apiKey=${apiKey}&since=${since}&bookmaker=${bookmaker}&sport=${sport}`
+  `https://api.odds-api.io/v3/odds/updated?apiKey=${apiKey}&since=${since}&bookmaker=${bookmaker}&sport=${sport}`
 );
 
 const updatedOdds = await response.json();

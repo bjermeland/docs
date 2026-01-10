@@ -2,7 +2,7 @@
     "openapi": "3.0.0",
     "x-origin": [
         {
-            "url": "https://api2.odds-api.io/v3/docs/doc.json",
+            "url": "https://api.odds-api.io/v3/docs/doc.json",
             "format": "swagger",
             "version": "2.0",
             "converter": {
@@ -1781,7 +1781,7 @@
     },
     "servers": [
         {
-            "url": "https://api2.odds-api.io/v3"
+            "url": "https://api.odds-api.io/v3"
         }
     ],
     "components": {

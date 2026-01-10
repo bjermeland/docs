@@ -1,7 +1,7 @@
 ---
 title: "WebSocket API"
 description: "Connect to Odds-API.io WebSocket for instant odds updates. Subscribe to events and receive live betting odds changes with sub-second latency."
-api: "WEBSOCKET wss://api2.odds-api.io/v3/ws"
+api: "WEBSOCKET wss://api.odds-api.io/v3/ws"
 ---
 
 ## Overview
@@ -16,7 +16,7 @@ The WebSocket feed delivers real-time odds updates with the same response format
 
 **Endpoint:**
 ```
-wss://api2.odds-api.io/v3/ws?apiKey=YOUR_API_KEY
+wss://api.odds-api.io/v3/ws?apiKey=YOUR_API_KEY
 ```
 
 **Optional Filters:**
@@ -85,7 +85,7 @@ wss://api2.odds-api.io/v3/ws?apiKey=YOUR_API_KEY
 const WebSocket = require('ws');
 
 const apiKey = process.env.ODDS_API_KEY;
-const ws = new WebSocket(`wss://api2.odds-api.io/v3/ws?apiKey=${apiKey}`);
+const ws = new WebSocket(`wss://api.odds-api.io/v3/ws?apiKey=${apiKey}`);
 
 ws.onopen = () => {
   console.log("Connected to Odds-API WebSocket");
@@ -111,7 +111,7 @@ ws.onclose = () => {
 
 ```javascript Browser
 const apiKey = 'YOUR_API_KEY';
-const ws = new WebSocket(`wss://api2.odds-api.io/v3/ws?apiKey=${apiKey}`);
+const ws = new WebSocket(`wss://api.odds-api.io/v3/ws?apiKey=${apiKey}`);
 
 ws.onopen = () => console.log("Connected");
 
@@ -147,7 +147,7 @@ def on_close(ws, close_status_code, close_msg):
     print("Disconnected from WebSocket")
 
 ws = websocket.WebSocketApp(
-    f"wss://api2.odds-api.io/v3/ws?apiKey={api_key}",
+    f"wss://api.odds-api.io/v3/ws?apiKey={api_key}",
     on_open=on_open,
     on_message=on_message,
     on_error=on_error,
@@ -162,7 +162,7 @@ ws.run_forever()
 use WebSocket\Client;
 
 $apiKey = getenv('ODDS_API_KEY');
-$client = new Client("wss://api2.odds-api.io/v3/ws?apiKey={$apiKey}");
+$client = new Client("wss://api.odds-api.io/v3/ws?apiKey={$apiKey}");
 
 echo "Connected to Odds-API WebSocket\n";
 

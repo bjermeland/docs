@@ -26,7 +26,7 @@ You'll only receive bets that have strong upside potential based on the latest o
 With a simple API call, you can retrieve profitable value bets from any bookmaker. For example, to get value bets from Bet365:
 
 ```bash
-https://api2.odds-api.io/v3/value-bets?apiKey=YOUR_API_KEY&bookmaker=Bet365&includeEventDetails=true
+https://api.odds-api.io/v3/value-bets?apiKey=YOUR_API_KEY&bookmaker=Bet365&includeEventDetails=true
 ```
 
 This will return live value bets from Bet365, complete with event info, odds, market type, and EV percentage.
@@ -34,14 +34,14 @@ This will return live value bets from Bet365, complete with event info, odds, ma
 <CodeGroup>
 
 ```bash cURL
-curl "https://api2.odds-api.io/v3/value-bets?apiKey=YOUR_API_KEY&bookmaker=Bet365&includeEventDetails=true"
+curl "https://api.odds-api.io/v3/value-bets?apiKey=YOUR_API_KEY&bookmaker=Bet365&includeEventDetails=true"
 ```
 
 ```javascript JavaScript
 const apiKey = process.env.ODDS_API_KEY;
 
 const response = await fetch(
-  `https://api2.odds-api.io/v3/value-bets?apiKey=${apiKey}&bookmaker=Bet365&includeEventDetails=true`
+  `https://api.odds-api.io/v3/value-bets?apiKey=${apiKey}&bookmaker=Bet365&includeEventDetails=true`
 );
 
 const valueBets = await response.json();
@@ -55,7 +55,7 @@ import os
 api_key = os.environ['ODDS_API_KEY']
 
 response = requests.get(
-    'https://api2.odds-api.io/v3/value-bets',
+    'https://api.odds-api.io/v3/value-bets',
     params={
         'apiKey': api_key,
         'bookmaker': 'Bet365',
@@ -71,7 +71,7 @@ print(value_bets)
 <?php
 $apiKey = getenv('ODDS_API_KEY');
 
-$url = 'https://api2.odds-api.io/v3/value-bets?' . http_build_query([
+$url = 'https://api.odds-api.io/v3/value-bets?' . http_build_query([
     'apiKey' => $apiKey,
     'bookmaker' => 'Bet365',
     'includeEventDetails' => true
@@ -182,7 +182,7 @@ async function getAllValueBets() {
 
   const promises = bookmakers.map(bookmaker =>
     fetch(
-      `https://api2.odds-api.io/v3/value-bets?apiKey=${apiKey}&bookmaker=${bookmaker}&includeEventDetails=true`
+      `https://api.odds-api.io/v3/value-bets?apiKey=${apiKey}&bookmaker=${bookmaker}&includeEventDetails=true`
     ).then(res => res.json())
   );
 
@@ -220,7 +220,7 @@ class ValueBetMonitor {
     for (const bookmaker of this.bookmakers) {
       try {
         const response = await fetch(
-          `https://api2.odds-api.io/v3/value-bets?apiKey=${this.apiKey}&bookmaker=${bookmaker}&includeEventDetails=true`
+          `https://api.odds-api.io/v3/value-bets?apiKey=${this.apiKey}&bookmaker=${bookmaker}&includeEventDetails=true`
         );
 
         const bets = await response.json();

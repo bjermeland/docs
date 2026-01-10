@@ -29,7 +29,7 @@ https://docs.odds-api.io/api-reference/openapi.json - OpenAPI specification with
 
 ## Base URL
 
-https://api2.odds-api.io/v3
+https://api.odds-api.io/v3
 
 ## Key Endpoints
 
